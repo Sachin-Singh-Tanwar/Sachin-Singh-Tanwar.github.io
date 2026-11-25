@@ -18,13 +18,14 @@ export default function ProjectCover({ index, category, capture, className }: Pr
   const uid = 'pc' + useId().replace(/[^a-zA-Z0-9]/g, '')
   const number = String(index + 1).padStart(2, '0')
   const label = category.toUpperCase()
+  const captureDate = capture?.match(/(\d{4}-\d{2}-\d{2})\.webp$/)?.[1]
 
   if (capture) {
     return (
       <img
         data-project-cover="image"
         src={capture}
-        alt={`${label.toLowerCase()} project capture ${number}`}
+        alt={`${label.toLowerCase()} screenshot${captureDate ? ` captured ${captureDate}` : ''} ${number}`}
         className={className ?? 'absolute inset-0 h-full w-full object-cover'}
         loading="lazy"
       />

@@ -78,7 +78,7 @@ export default function Hero() {
             className="mt-6 max-w-[900px] text-balance font-sans text-[56px] font-semibold leading-[0.95] tracking-[-0.045em] text-white md:text-[96px]"
           >
             I build automation
-            <br className="hidden xl:block" /> that{' '}
+            <br className="hidden lg:block" /> that{' '}
             <span
               className="font-serif italic"
               style={{ color: 'oklch(0.78 0.12 195)' }}

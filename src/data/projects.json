@@ -14,7 +14,6 @@
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/beacon-lead-scorer",
     "live": null,
-    "thumbnail": "/thumbnails/beacon-lead-scorer.png",
     "category": "web",
     "status": "building",
     "year": 2026
@@ -34,7 +33,6 @@
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics",
     "live": null,
-    "thumbnail": "/thumbnails/retailnova-analytics.png",
     "category": "tool",
     "status": "live",
     "year": 2026
@@ -54,7 +52,6 @@
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/phishing-detector",
     "live": "https://phishing-detector-nhel.onrender.com",
-    "thumbnail": "/thumbnails/phishing-detector.png",
     "category": "tool",
     "status": "live",
     "year": 2026
@@ -75,7 +72,6 @@
     ],
     "github": null,
     "live": null,
-    "thumbnail": "/thumbnails/autonomous-revenue-engine.png",
     "category": "automation",
     "status": "building",
     "year": 2026
@@ -93,7 +89,6 @@
     ],
     "github": null,
     "live": null,
-    "thumbnail": "/thumbnails/apify-data-extraction-actor.png",
     "category": "api",
     "status": "building",
     "year": 2026
@@ -113,7 +108,6 @@
     ],
     "github": null,
     "live": null,
-    "thumbnail": "/thumbnails/opencode-worker.png",
     "category": "tool",
     "status": "building",
     "year": 2026
@@ -133,7 +127,6 @@
     ],
     "github": null,
     "live": null,
-    "thumbnail": "/thumbnails/ai-client-portal.png",
     "category": "web",
     "status": "building",
     "year": 2026
@@ -153,7 +146,6 @@
     ],
     "github": null,
     "live": null,
-    "thumbnail": "/thumbnails/automation-dashboard.png",
     "category": "automation",
     "status": "building",
     "year": 2026
