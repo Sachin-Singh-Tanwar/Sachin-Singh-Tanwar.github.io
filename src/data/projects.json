@@ -1,0 +1,161 @@
+[
+  {
+    "id": "beacon-lead-scorer",
+    "title": "Beacon Lead Scorer",
+    "tagline": "Score a B2B lead 1-10 from live public web data.",
+    "problem": "Manual lead research is slow and usually depends on paid APIs before a lead is even worth a look.",
+    "solution": "Built a Next.js app that researches a company through keyless public sources and returns a scored report with reasoning and sources, plus a deterministic fallback.",
+    "impact": "In development",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Zod"
+    ],
+    "github": "https://github.com/Sachin-Singh-Tanwar/beacon-lead-scorer",
+    "live": null,
+    "thumbnail": "/thumbnails/beacon-lead-scorer.png",
+    "category": "web",
+    "status": "building",
+    "year": 2026
+  },
+  {
+    "id": "retailnova-analytics",
+    "title": "RetailNova Enterprise Analytics",
+    "tagline": "SQL and Power BI analytics for a multi-channel retailer.",
+    "problem": "Retail operations needed profitability, returns and logistics signals in one decision view.",
+    "solution": "Built MySQL and Python cleaning/EDA over staged CSV datasets, plus Power BI executive dashboards.",
+    "impact": "Shipped and live",
+    "tech": [
+      "MySQL",
+      "Python",
+      "Pandas",
+      "Power BI"
+    ],
+    "github": "https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics",
+    "live": null,
+    "thumbnail": "/thumbnails/retailnova-analytics.png",
+    "category": "tool",
+    "status": "live",
+    "year": 2026
+  },
+  {
+    "id": "phishing-detector",
+    "title": "Phishing Detector",
+    "tagline": "Chrome extension that checks a page against a Django API.",
+    "problem": "Users cannot quickly tell whether the page in front of them is legitimate or a phishing site.",
+    "solution": "Built a Chrome popup that sends the current URL to a hosted Django REST endpoint and shows a safe or phishing verdict.",
+    "impact": "Shipped and live",
+    "tech": [
+      "Django",
+      "Django REST Framework",
+      "JavaScript",
+      "Chrome Extension"
+    ],
+    "github": "https://github.com/Sachin-Singh-Tanwar/phishing-detector",
+    "live": "https://phishing-detector-nhel.onrender.com",
+    "thumbnail": "/thumbnails/phishing-detector.png",
+    "category": "tool",
+    "status": "live",
+    "year": 2026
+  },
+  {
+    "id": "autonomous-revenue-engine",
+    "title": "Autonomous Revenue Engine",
+    "tagline": "24/7 worker that scans bounties and drafts bids with guardrails.",
+    "problem": "Finding and qualifying freelance work stalls as soon as the laptop closes, and paid APIs or proxies add cost before any return.",
+    "solution": "Built a worker with Ollama triage, Apify data, systemd timers, Telegram digests and hard spend guardrails; a human sends every bid.",
+    "impact": "In development",
+    "tech": [
+      "Python",
+      "Ollama",
+      "systemd",
+      "Apify",
+      "Telegram"
+    ],
+    "github": null,
+    "live": null,
+    "thumbnail": "/thumbnails/autonomous-revenue-engine.png",
+    "category": "automation",
+    "status": "building",
+    "year": 2026
+  },
+  {
+    "id": "apify-data-extraction-actor",
+    "title": "Apify Data Extraction Actor",
+    "tagline": "Production scraper actor with buyer-safe defaults.",
+    "problem": "Extracting clean lead data for buyers needs a hosted actor that is safe to run and predictable in output.",
+    "solution": "Built and tested a private Apify actor with a versioned build and deterministic result shape.",
+    "impact": "In development",
+    "tech": [
+      "TypeScript",
+      "Apify SDK"
+    ],
+    "github": null,
+    "live": null,
+    "thumbnail": "/thumbnails/apify-data-extraction-actor.png",
+    "category": "api",
+    "status": "building",
+    "year": 2026
+  },
+  {
+    "id": "opencode-worker",
+    "title": "OpenCode Worker",
+    "tagline": "Headless coding agent controlled through a small HTTP API.",
+    "problem": "Long-running coding tasks need a worker that survives a closed laptop and stays reachable for a remote manager.",
+    "solution": "Ran an OpenCode server as a systemd service behind the v1 HTTP API with a Cloudflare tunnel and SSH-tunneled manager access.",
+    "impact": "In development",
+    "tech": [
+      "OpenCode",
+      "FastAPI",
+      "Cloudflare",
+      "systemd"
+    ],
+    "github": null,
+    "live": null,
+    "thumbnail": "/thumbnails/opencode-worker.png",
+    "category": "tool",
+    "status": "building",
+    "year": 2026
+  },
+  {
+    "id": "ai-client-portal",
+    "title": "AI Client Portal",
+    "tagline": "A client portal for briefs, approvals and delivery status.",
+    "problem": "Client work gets scattered across chats, docs and ad-hoc status updates.",
+    "solution": "Building one portal where clients can submit briefs, review milestones and track delivery in a single place.",
+    "impact": "In development",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Supabase",
+      "Tailwind CSS"
+    ],
+    "github": null,
+    "live": null,
+    "thumbnail": "/thumbnails/ai-client-portal.png",
+    "category": "web",
+    "status": "building",
+    "year": 2026
+  },
+  {
+    "id": "automation-dashboard",
+    "title": "Automation Dashboard",
+    "tagline": "One dashboard for worker jobs, spend and alerts.",
+    "problem": "Background automation is hard to trust without a clear view of jobs, costs and failures.",
+    "solution": "Building a dashboard that surfaces worker runs, credit guardrails and Telegram alerts in one place.",
+    "impact": "In development",
+    "tech": [
+      "React",
+      "FastAPI",
+      "Python",
+      "systemd"
+    ],
+    "github": null,
+    "live": null,
+    "thumbnail": "/thumbnails/automation-dashboard.png",
+    "category": "automation",
+    "status": "building",
+    "year": 2026
+  }
+]
