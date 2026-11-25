@@ -1,0 +1,16 @@
+{
+  "id": "tally",
+  "title": "Tally",
+  "tagline": "Reconciliation runner with deterministic output.",
+  "problem": "PLACEHOLDER: describe the documented failure mode.",
+  "solution": "PLACEHOLDER: describe the implemented fix.",
+  "impact": "In development",
+  "tech": ["Python"],
+  "github": null,
+  "live": null,
+  "thumbnail": null,
+  "capture": "/thumbnails/tally.webp",
+  "category": "automation",
+  "status": "building",
+  "year": 2026
+}

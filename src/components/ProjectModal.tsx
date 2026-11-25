@@ -88,7 +88,7 @@ export default function ProjectModal({ project, index, onClose }: Props) {
         </div>
 
         <div data-project-cover-strip className="relative mt-6 h-[140px] overflow-hidden rounded-xl border border-white/10">
-          <ProjectCover index={index} category={project.category} />
+          <ProjectCover index={index} category={project.category} capture={project.capture} />
           <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <div className="absolute bottom-3 left-4 z-10 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em]">
             <span className="tabular-nums text-white/85">{String(index + 1).padStart(2, '0')}</span>

@@ -11,6 +11,7 @@ const featured = projects[0]
 const shippedCount = projects.length
 const categories = Array.from(new Set(projects.map((project) => project.category)))
 const liveCount = projects.filter((project) => project.status === 'live').length
+const buildingCount = projects.filter((project) => project.status === 'building').length
 
 const stack = ['Python', 'TypeScript', 'React', 'Node', 'Postgres', 'Playwright']
 
@@ -67,16 +68,24 @@ export default function Hero() {
   return (
     <section id="hero" className="px-5 pb-20 pt-28 md:px-8 md:pt-32">
       <div className="mx-auto grid max-w-7xl grid-cols-12 gap-3 auto-rows-[minmax(150px,auto)] md:gap-4">
-        <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-7')}>
+        <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-9')}>
           <p className="font-mono text-[13px] uppercase tracking-[0.2em] text-white/50">
             Sachin Singh Tanwar · Automation Engineer
           </p>
           <h1
             data-pitch
             style={{ fontFamily: 'Inter, sans-serif' }}
-            className="mt-6 font-sans text-[56px] font-semibold leading-[0.95] tracking-[-0.045em] text-white md:text-[96px]"
+            className="mt-6 max-w-[900px] text-balance font-sans text-[56px] font-semibold leading-[0.95] tracking-[-0.045em] text-white md:text-[96px]"
           >
-            I build automation that <span className="font-serif italic text-[var(--accent-cyan)]">proves it ran</span>.
+            I build automation
+            <br className="hidden xl:block" /> that{' '}
+            <span
+              className="font-serif italic"
+              style={{ color: 'oklch(0.78 0.12 195)' }}
+            >
+              proves it ran
+            </span>
+            .
           </h1>
           <div className="mt-8 flex w-full flex-col items-start gap-4 sm:w-auto sm:flex-row sm:items-center">
             <a
@@ -94,7 +103,7 @@ export default function Hero() {
           </div>
         </article>
 
-        <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-5')}>
+        <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-3')}>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Status</p>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-cyan-200">
             <span className="relative flex h-2 w-2">
@@ -112,10 +121,22 @@ export default function Hero() {
               <span className="text-white/35">Response</span>
               <span className="text-right text-white/85">within 24h</span>
             </div>
+            <div className="flex items-center justify-between gap-3 py-1.5">
+              <span className="text-white/35">Local time</span>
+              <span className="tabular-nums text-right text-white/85">{clock || '—'} IST</span>
+            </div>
+            <div className="flex items-center justify-between gap-3 py-1.5">
+              <span className="text-white/35">Live projects</span>
+              <span className="tabular-nums text-right text-white/85">{liveCount}</span>
+            </div>
+            <div className="flex items-center justify-between gap-3 py-1.5">
+              <span className="text-white/35">In build</span>
+              <span className="tabular-nums text-right text-white/85">{buildingCount}</span>
+            </div>
           </div>
         </article>
 
-        <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
+        <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-6')}>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Projects</p>
           <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-cyan)]">
             {shippedCount}
@@ -125,7 +146,7 @@ export default function Hero() {
           </p>
         </article>
 
-        <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
+        <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-6')}>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Disciplines</p>
           <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-purple)]">
             {categories.length}
@@ -133,16 +154,6 @@ export default function Hero() {
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
             {categories.join(' / ')}
           </p>
-        </article>
-
-        <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Availability</p>
-          <div className="mt-4 divide-y divide-white/5 font-mono text-[10px] uppercase tracking-[0.22em]">
-            <div className="flex items-center justify-between gap-3 py-2">
-              <span className="text-white/35">Local time</span>
-              <span className="tabular-nums text-white/85">{clock || '—'} IST</span>
-            </div>
-          </div>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-0 lg:col-span-8')}>
@@ -163,7 +174,7 @@ export default function Hero() {
             />
             <span className="relative block w-1/2 shrink-0 overflow-hidden bg-[#08080a]">
               <span className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.03]">
-                <ProjectCover index={featuredIndex} category={featured.category} />
+                <ProjectCover index={featuredIndex} category={featured.category} capture={featured.capture} />
               </span>
             </span>
             <span className="flex w-1/2 flex-col justify-center p-6">

@@ -3,10 +3,11 @@ import { useId } from 'react'
 type Props = {
   index: number
   category: string
+  capture?: string | null
   className?: string
 }
 
-export default function ProjectCover({ index, category, className }: Props) {
+export default function ProjectCover({ index, category, capture, className }: Props) {
   const seed = category.split('').reduce((a, c) => a + c.charCodeAt(0), 0) + index * 37
   const hue = 180 + ((seed * 29) % 140)
   const hue2 = 250 + (seed % 80)
@@ -17,6 +18,18 @@ export default function ProjectCover({ index, category, className }: Props) {
   const uid = 'pc' + useId().replace(/[^a-zA-Z0-9]/g, '')
   const number = String(index + 1).padStart(2, '0')
   const label = category.toUpperCase()
+
+  if (capture) {
+    return (
+      <img
+        data-project-cover="image"
+        src={capture}
+        alt={`${label.toLowerCase()} project capture ${number}`}
+        className={className ?? 'absolute inset-0 h-full w-full object-cover'}
+        loading="lazy"
+      />
+    )
+  }
 
   return (
     <svg

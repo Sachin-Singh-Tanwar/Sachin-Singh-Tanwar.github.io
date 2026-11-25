@@ -55,7 +55,7 @@ export default function ProjectCard({ project, index, onOpen }: Props) {
       />
       <div data-cover className="relative aspect-[16/10] w-full overflow-hidden bg-[#08080a]">
         <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.03]">
-          <ProjectCover index={index} category={project.category} />
+          <ProjectCover index={index} category={project.category} capture={project.capture} />
         </div>
         <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
         <span
