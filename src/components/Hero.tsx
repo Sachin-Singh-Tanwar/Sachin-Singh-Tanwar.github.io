@@ -10,6 +10,7 @@ const projects: Project[] = projectData.map((item) => projectSchema.parse(item))
 const featured = projects[0]
 const shippedCount = projects.length
 const categories = Array.from(new Set(projects.map((project) => project.category)))
+const liveCount = projects.filter((project) => project.status === 'live').length
 
 const stack = ['Python', 'TypeScript', 'React', 'Node', 'Postgres', 'Playwright']
 
@@ -67,33 +68,28 @@ export default function Hero() {
     <section id="hero" className="px-5 pb-20 pt-28 md:px-8 md:pt-32">
       <div className="mx-auto grid max-w-7xl grid-cols-12 gap-3 auto-rows-[minmax(150px,auto)] md:gap-4">
         <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-7')}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-            Portfolio / 2026
+          <p className="font-mono text-[13px] uppercase tracking-[0.2em] text-white/50">
+            Sachin Singh Tanwar · Automation Engineer
           </p>
-          <h1 className="mt-6 font-sans text-[clamp(2.4rem,9vw,3.6rem)] font-bold leading-[0.92] tracking-[-0.045em] text-[var(--text-primary)] lg:text-6xl">
-            Sachin Singh Tanwar
-          </h1>
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/40 sm:text-[11px]">
-            Full-Stack Developer · AI Automation Engineer
-          </p>
-          <p
-            className="mt-5 whitespace-nowrap text-xl text-white/75 sm:whitespace-normal sm:text-2xl"
-            style={{ fontFamily: 'Instrument Serif, Georgia, serif' }}
+          <h1
+            data-pitch
+            style={{ fontFamily: 'Inter, sans-serif' }}
+            className="mt-6 font-sans text-[56px] font-semibold leading-[0.95] tracking-[-0.045em] text-white md:text-[96px]"
           >
-            I build automation that <em className="italic">ships.</em>
-          </p>
-          <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            I build automation that <span className="font-serif italic text-[var(--accent-cyan)]">proves it ran</span>.
+          </h1>
+          <div className="mt-8 flex w-full flex-col items-start gap-4 sm:w-auto sm:flex-row sm:items-center">
             <a
               href="#projects"
               className="w-full rounded-full bg-white px-7 py-3 text-center text-sm font-semibold text-black transition hover:bg-white/90 sm:w-auto"
             >
-              View Projects
+              See the work
             </a>
             <a
               href="#contact"
-              className="w-full rounded-full border border-white/20 px-7 py-3 text-center text-sm font-semibold text-white transition hover:border-white/40 sm:w-auto"
+              className="border-b border-white/20 pb-0.5 font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:border-white/50 hover:text-white"
             >
-              Get in Touch
+              Get in touch
             </a>
           </div>
         </article>
@@ -122,15 +118,15 @@ export default function Hero() {
         <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Projects</p>
           <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-cyan)]">
-            {shippedCount}+
+            {shippedCount}
           </p>
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
-            TOTAL ENTRIES
+            {liveCount} live
           </p>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Categories</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Disciplines</p>
           <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-purple)]">
             {categories.length}
           </p>
@@ -145,14 +141,6 @@ export default function Hero() {
             <div className="flex items-center justify-between gap-3 py-2">
               <span className="text-white/35">Local time</span>
               <span className="tabular-nums text-white/85">{clock || '—'} IST</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-2">
-              <span className="text-white/35">Timezone</span>
-              <span className="text-white/85">IST (UTC+5:30)</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-2">
-              <span className="text-white/35">Response</span>
-              <span className="text-white/85">within 24h</span>
             </div>
           </div>
         </article>

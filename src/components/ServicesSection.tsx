@@ -32,8 +32,8 @@ const services = [
   },
   {
     icon: <DeviceIcon />,
-    title: 'App Development',
-    description: 'Practical full-stack apps with reliable auth, data models and deployment paths.',
+    title: 'Data Pipelines',
+    description: 'Scheduled scrapers and extraction with clean output schemas and cost guards.',
   },
   {
     icon: <SparkIcon />,

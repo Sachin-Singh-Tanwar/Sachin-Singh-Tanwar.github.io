@@ -129,20 +129,24 @@ export default function ProjectsSection() {
               role="group"
               aria-label="Projects view mode"
             >
-              {(['carousel', 'grid'] as View[]).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  data-view={mode}
-                  aria-pressed={view === mode}
-                  onClick={() => setView(mode)}
-                  className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
-                    view === mode ? 'bg-white text-black' : 'text-white/55 hover:text-white'
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
+              {(['carousel', 'grid'] as View[]).map((mode) => {
+                const isActive = view === mode
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    data-view={mode}
+                    data-active={isActive}
+                    aria-pressed={isActive}
+                    onClick={() => setView(mode)}
+                    className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
+                      isActive ? 'bg-white text-black' : 'text-white/55 hover:text-white'
+                    }`}
+                  >
+                    {mode}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>

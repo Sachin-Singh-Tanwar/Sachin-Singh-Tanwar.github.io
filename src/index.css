@@ -83,13 +83,6 @@ input[data-palette-input]:focus-visible {
   --tw-ring-shadow: 0 0 #0000 !important;
 }
 
-.gradient-text {
-  background-image: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 [data-project-card]:hover [data-cover] > div:first-child {
   transform: scale(1.03);
 }

@@ -22,7 +22,7 @@ export default function ContactSection() {
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyan-300/80">
           03 — Contact
         </p>
-        <h2 className="gradient-text mt-4 text-4xl font-bold tracking-tight sm:text-6xl">
+        <h2 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-6xl">
           Let&apos;s build something.
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-base text-white/60">
