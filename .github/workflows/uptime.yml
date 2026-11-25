@@ -1,0 +1,21 @@
+name: uptime
+on:
+  schedule: [{cron: '*/15 * * * *'}]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: page 200 + real content + asset resolves
+        run: |
+          set -e
+          code=$(curl -s -o body.html -w '%{http_code}' https://sachin-singh-tanwar.github.io/)
+          echo "HTTP=$code"; test "$code" = "200"
+          grep -q 'Automation Engineer' body.html
+          asset=$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' body.html | head -1)
+          echo "ASSET=$asset"; test -n "$asset"
+          test "$(curl -s -o /dev/null -w '%{http_code}' "https://sachin-singh-tanwar.github.io/$asset")" = "200"
+      - name: pages config still exists
+        env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' }
+        run: gh api repos/${{ github.repository }}/pages --jq '.source.branch' | grep -qx main
+
