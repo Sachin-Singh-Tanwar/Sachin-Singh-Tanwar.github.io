@@ -47,7 +47,7 @@ export default function App() {
       </header>
       <CommandPalette />
       <MagneticCursor />
-      <main className="relative z-10">
+      <main className="relative">
         <Hero />
         <ProjectsSection />
         <ServicesSection />

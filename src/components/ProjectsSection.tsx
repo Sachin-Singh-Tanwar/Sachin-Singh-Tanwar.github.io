@@ -96,7 +96,7 @@ export default function ProjectsSection() {
   const closeModal = useCallback(() => setSelected(null), [])
 
   return (
-    <section id="projects" className="border-t border-white/5 px-5 py-24 md:px-8 md:py-32">
+    <section id="projects" className="scroll-mt-14 border-t border-white/5 px-5 py-24 md:px-8 md:py-32">
       <div className="mx-auto max-w-7xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
           01 — Selected Work
@@ -125,7 +125,7 @@ export default function ProjectsSection() {
               ))}
             </div>
             <div
-              className="inline-flex items-center gap-1 self-start rounded-full border border-white/10 bg-white/[0.04] p-1"
+              className="relative z-[60] inline-flex scroll-mt-20 items-center gap-1 self-start rounded-full border border-white/10 bg-white/[0.04] p-1"
               role="group"
               aria-label="Projects view mode"
             >
@@ -139,7 +139,7 @@ export default function ProjectsSection() {
                     data-active={isActive}
                     aria-pressed={isActive}
                     onClick={() => setView(mode)}
-                    className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
+                    className={`scroll-mt-20 rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
                       isActive ? 'bg-white text-black' : 'text-white/55 hover:text-white'
                     }`}
                   >
