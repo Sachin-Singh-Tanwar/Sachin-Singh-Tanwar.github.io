@@ -70,7 +70,7 @@ export default function ProjectModal({ project, index, onClose }: Props) {
         <div className="flex items-start justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-300/80">
-              {building ? 'Building' : 'Case study'} · {project.year}
+              {building ? 'Building' : 'Shipped proof'} · {project.year}
             </p>
             <h2 id="project-modal-title" className="mt-2 text-2xl font-bold sm:text-3xl">
               {project.title}
@@ -119,7 +119,7 @@ export default function ProjectModal({ project, index, onClose }: Props) {
 
         {building && (
           <p className="mt-6 rounded-xl border border-amber-300/20 bg-amber-400/10 p-4 text-sm text-amber-100">
-            In development — case study coming soon
+            In build — no shipped metric yet
           </p>
         )}
 

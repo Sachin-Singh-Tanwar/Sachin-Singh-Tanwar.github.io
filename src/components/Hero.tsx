@@ -64,16 +64,19 @@ export default function Hero() {
               href="#projects"
               className="w-full rounded-full bg-white px-7 py-3 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-white/90 sm:w-auto"
             >
-              See selected work
+              Open Evidence Workbench · IN BUILD
             </a>
             <a
               href="#services"
               className="border-b border-white/20 pb-0.5 font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:border-white/50 hover:text-white"
             >
-              See services
+              See Build Lab · IN BUILD
             </a>
           </div>
-          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
+            One site, four targets — client conversion · engineering proof · agent/machine readability · skill demonstration
+          </p>
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
             Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Receipts Panel · IN BUILD · Architecture Map · PLANNED
           </p>
         </article>

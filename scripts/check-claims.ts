@@ -53,6 +53,14 @@ const rules: Rule[] = [
     message: 'Every staged reference needs an explicit uppercase STAGED label.',
     matches: (line) => /\bstaged\b/i.test(line) && !/\bSTAGED\b/.test(line),
   },
+  {
+    id: 'internal-surface',
+    message: 'Internal-only terms must not appear in public portfolio files.',
+    matches: (line) =>
+      /\b(ledger|rclone|abxyz|central[ -]hub|outreach|case[ -]stud(?:y|ies)|backup|credential|secret|strategy)\b/i.test(
+        line,
+      ),
+  },
 ]
 
 const findings: string[] = []

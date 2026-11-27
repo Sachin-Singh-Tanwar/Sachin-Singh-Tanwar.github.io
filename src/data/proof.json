@@ -5,6 +5,40 @@
     "PORTFOLIO-RESEARCH-2026-2027.md",
     "PARTNER-PROGRESS.md"
   ],
+  "publicPositioning": {
+    "model": "ek teer se multiple nishane",
+    "oneSiteFourTargets": [
+      "client conversion",
+      "engineering proof",
+      "agent/machine readability",
+      "skill demonstration"
+    ]
+  },
+  "researchLock": {
+    "hero": "Web systems that show the receipt.",
+    "sixModules": [
+      "Evidence Workbench",
+      "Capability Matrix",
+      "Build Lab",
+      "Receipts Panel",
+      "Architecture Map",
+      "Progressive Enhancement Matrix"
+    ],
+    "featured": "Sentinel first",
+    "tallyGate": "2026-12-01: 15:05Z + 15:35Z",
+    "pendingVisualFixes": [
+      "visible focus token (min 2px, 3:1 contrast, 2px offset)",
+      "CommandPalette input focus ring",
+      "390px no-overflow",
+      "reduced-motion static fallback"
+    ],
+    "receipts": {
+      "sentinelTestsPassed": 48,
+      "briefDurationSeconds": 67.86,
+      "logDurationSeconds": 96.89,
+      "durationStatus": "unverified"
+    }
+  },
   "sentinel": {
     "board": "5/5 HEALTHY",
     "schemaFailures": 0,
@@ -46,8 +80,7 @@
     "architectureMap": "PLANNED",
     "progressiveEnhancementMatrix": "PLANNED",
     "screenshotProofVault": "PLANNED",
-    "publicProofEndpoint": "PLANNED",
-    "additionalCaseStudies": "PENDING VERIFIED PROOF"
+    "publicProofEndpoint": "PLANNED"
   },
   "neverPublish": [
     "unverified hourly rate claims",
