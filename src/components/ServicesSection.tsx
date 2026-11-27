@@ -70,7 +70,7 @@ export default function ServicesSection() {
           </div>
         </div>
         <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.3em] text-cyan-400/70">
-          02 — What I Do
+          08 — What I Do
         </p>
         <h2 className="mt-4 max-w-[18ch] text-3xl font-bold leading-[1.08] tracking-[-0.03em] sm:text-5xl">
           Three ways I can help.

@@ -61,13 +61,13 @@ export default function Hero() {
           </p>
           <div className="mt-8 flex w-full flex-col items-start gap-4 sm:w-auto sm:flex-row sm:items-center">
             <a
-              href="#projects"
+              href="#evidence"
               className="w-full rounded-full bg-white px-7 py-3 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-white/90 sm:w-auto"
             >
               Open Evidence Workbench · IN BUILD
             </a>
             <a
-              href="#services"
+              href="#build-lab"
               className="border-b border-white/20 pb-0.5 font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:border-white/50 hover:text-white"
             >
               See Build Lab · IN BUILD

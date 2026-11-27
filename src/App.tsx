@@ -2,6 +2,7 @@ import CommandPalette from './components/CommandPalette'
 import ContactSection from './components/ContactSection'
 import Hero from './components/Hero'
 import MagneticCursor from './components/MagneticCursor'
+import ProofModules from './components/ProofModules'
 import ProjectsSection from './components/ProjectsSection'
 import ServicesSection from './components/ServicesSection'
 
@@ -21,6 +22,12 @@ export default function App() {
             SST
           </a>
           <div className="flex items-center gap-6">
+            <a
+              href="#evidence"
+              className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:text-white md:inline"
+            >
+              Proof
+            </a>
             <a
               href="#projects"
               className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:text-white md:inline"
@@ -50,6 +57,7 @@ export default function App() {
       <main className="relative">
         <Hero />
         <ProjectsSection />
+        <ProofModules />
         <ServicesSection />
         <ContactSection />
       </main>

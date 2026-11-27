@@ -63,6 +63,22 @@ export default function CommandPalette() {
         run: () => goTo('projects'),
       },
       {
+        id: 'evidence',
+        label: 'Go to Evidence Workbench',
+        hint: 'Verified claims',
+        group: 'Navigation',
+        icon: <ArrowUpRight className="h-4 w-4" />,
+        run: () => goTo('evidence'),
+      },
+      {
+        id: 'build-lab',
+        label: 'Go to Build Lab',
+        hint: 'Progressive enhancement demos',
+        group: 'Navigation',
+        icon: <ArrowUpRight className="h-4 w-4" />,
+        run: () => goTo('build-lab'),
+      },
+      {
         id: 'services',
         label: 'Go to Services',
         hint: 'What I do',
@@ -147,7 +163,7 @@ export default function CommandPalette() {
                 placeholder="Search actions…"
                 aria-label="Search commands"
                 data-palette-input
-                className="w-full border-0 bg-transparent text-sm text-white caret-cyan-400 outline-none ring-0 placeholder:text-white/30 focus:outline-none focus:ring-0 focus-visible:outline-none"
+                className="w-full border-0 bg-transparent text-sm text-white caret-cyan-400 placeholder:text-white/30"
               />
               <button
                 type="button"

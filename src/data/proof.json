@@ -39,6 +39,20 @@
       "durationStatus": "unverified"
     }
   },
+  "block3": {
+    "status": "IMPLEMENTED LOCALLY",
+    "modules": [
+      "Evidence Workbench",
+      "Capability Matrix",
+      "Build Lab",
+      "Receipts Panel",
+      "Architecture Map",
+      "Progressive Enhancement Matrix"
+    ],
+    "focusToken": "implemented locally",
+    "commandPaletteFocus": "implemented locally",
+    "playwrightAudit": "pending deploy approval"
+  },
   "sentinel": {
     "board": "5/5 HEALTHY",
     "schemaFailures": 0,
@@ -77,8 +91,8 @@
     "capabilityMatrix": "IN BUILD",
     "buildLab": "IN BUILD",
     "receiptsPanel": "IN BUILD",
-    "architectureMap": "PLANNED",
-    "progressiveEnhancementMatrix": "PLANNED",
+    "architectureMap": "IN BUILD",
+    "progressiveEnhancementMatrix": "IN BUILD",
     "screenshotProofVault": "PLANNED",
     "publicProofEndpoint": "PLANNED"
   },
