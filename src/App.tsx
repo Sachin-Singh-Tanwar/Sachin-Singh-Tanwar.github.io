@@ -10,9 +10,10 @@ export default function App() {
   return (
     <div className="relative min-h-screen text-white">
       <div className="page-backdrop" aria-hidden="true" />
+      <div className="scroll-progress" aria-hidden="true" />
       <header
         data-primary-nav
-        className="sticky top-0 z-50 h-14 border-b border-white/[0.08] bg-[#050505]/70 backdrop-blur"
+        className="sticky top-0 z-50 h-14 border-b border-white/[0.08] bg-[rgba(8,8,6,0.72)] backdrop-blur"
       >
         <nav
           className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 md:px-8"

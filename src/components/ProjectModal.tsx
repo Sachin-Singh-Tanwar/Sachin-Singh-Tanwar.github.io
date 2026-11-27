@@ -88,13 +88,37 @@ export default function ProjectModal({ project, index, onClose }: Props) {
         </div>
 
         <div data-project-cover-strip className="relative mt-6 h-[140px] overflow-hidden rounded-xl border border-white/10">
-          <ProjectCover index={index} category={project.category} capture={project.capture} />
+          <ProjectCover
+            index={index}
+            category={project.category}
+            capture={project.capture}
+            visual={project.visual}
+          />
           <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <div className="absolute bottom-3 left-4 z-10 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em]">
             <span className="tabular-nums text-white/85">{String(index + 1).padStart(2, '0')}</span>
             <span className="text-white/45">{project.category}</span>
           </div>
         </div>
+
+        {project.visual?.gallery && project.visual.gallery.length > 0 && (
+          <div data-project-gallery className="mt-3">
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40">
+              {project.visual.label} · more views
+            </p>
+            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
+              {project.visual.gallery.map((src) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${project.title} repository view`}
+                  loading="lazy"
+                  className="aspect-video w-full rounded-md border border-white/10 object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-7 space-y-5">
           <section>

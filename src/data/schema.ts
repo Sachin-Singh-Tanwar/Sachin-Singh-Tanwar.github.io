@@ -16,6 +16,17 @@ export const projectSchema = z
       .regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*-\d{4}-\d{2}-\d{2}\.webp$/)
       .nullable()
       .optional(),
+    visual: z
+      .object({
+        src: z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/),
+        alt: z.string().min(1).max(180),
+        label: z.string().min(1).max(48),
+        source: z.string().url().nullable().optional(),
+        gallery: z.array(z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/)).max(6).optional(),
+      })
+      .strict()
+      .nullable()
+      .optional(),
     category: z.enum(['automation', 'web', 'api', 'tool']),
     status: z.enum(['live', 'building']),
     year: z.number().int(),
@@ -27,6 +38,13 @@ export const projectSchema = z
         code: z.ZodIssueCode.custom,
         path: ['impact'],
         message: 'impact must not contain PLACEHOLDER:',
+      })
+    }
+    if (project.capture && project.visual) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['visual'],
+        message: 'visual must not be combined with a verified capture',
       })
     }
     if (project.capture) {

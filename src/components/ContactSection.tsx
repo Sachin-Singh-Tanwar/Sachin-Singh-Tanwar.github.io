@@ -18,7 +18,7 @@ export default function ContactSection() {
       id="contact"
       className="border-t border-white/5 px-5 py-24 md:px-8 md:py-32"
     >
-      <div className="mx-auto max-w-4xl text-center">
+      <div className="reveal-on-scroll mx-auto max-w-4xl text-center">
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyan-300/80">
           03 — Contact
         </p>

@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useMemo, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import projectData from '../data/projects.json'
 import { projectSchema, type Project } from '../data/schema'
@@ -34,6 +43,7 @@ export default function ProjectsSection() {
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(true)
   const [selected, setSelected] = useState<Project | null>(null)
+  const viewportRef = useRef<HTMLDivElement | null>(null)
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: 'start',
@@ -91,6 +101,23 @@ export default function ProjectsSection() {
       event.preventDefault()
       emblaApi?.scrollNext()
     }
+  }
+
+  const handleClothMove = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const node = viewportRef.current
+    if (!node) return
+    const rect = node.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return
+    node.style.setProperty('--pointer-x', ((event.clientX - rect.left) / rect.width).toFixed(3))
+    node.style.setProperty('--pointer-y', ((event.clientY - rect.top) / rect.height - 0.5).toFixed(3))
+  }
+
+  const resetCloth = () => {
+    const node = viewportRef.current
+    if (!node) return
+    node.style.setProperty('--pointer-x', '0.5')
+    node.style.setProperty('--pointer-y', '0')
   }
 
   const closeModal = useCallback(() => setSelected(null), [])
@@ -153,33 +180,43 @@ export default function ProjectsSection() {
 
         <div className="mt-12">
           {view === 'carousel' ? (
-            <div
-              ref={emblaRef}
-              className="overflow-hidden"
-              role="region"
-              aria-roledescription="carousel"
-              aria-label="Project carousel"
-              tabIndex={0}
-              onKeyDown={handleKeyDown}
-            >
-              <div className="flex gap-4">
-                {visible.map((project, index) => {
-                  const isActive =
-                    index === activeIndex &&
-                    (slidesInView.length === 0 || slidesInView.includes(index))
-                  return (
-                    <div
-                      key={project.id}
-                      className={`project-slide min-w-0 shrink-0 basis-[min(85vw,420px)] transition-all duration-500 ${
-                        isActive ? 'scale-100 opacity-100' : 'scale-95 opacity-60'
-                      }`}
-                      aria-roledescription="slide"
-                      aria-label={`${index + 1} of ${visible.length}`}
-                    >
-                      <ProjectCard project={project} index={index} onOpen={setSelected} />
-                    </div>
-                  )
-                })}
+            <div className="cloth-stage">
+              <span className="clothesline" aria-hidden="true" />
+              <div
+                ref={(node) => {
+                  emblaRef(node)
+                  viewportRef.current = node
+                }}
+                className="cloth-viewport overflow-hidden"
+                role="region"
+                aria-roledescription="carousel"
+                aria-label="Project carousel"
+                tabIndex={0}
+                onKeyDown={handleKeyDown}
+                onMouseMove={handleClothMove}
+                onMouseLeave={resetCloth}
+              >
+                <div className="flex gap-5 px-1">
+                  {visible.map((project, index) => {
+                    const isActive =
+                      index === activeIndex &&
+                      (slidesInView.length === 0 || slidesInView.includes(index))
+                    const clothIndex = visible.length > 1 ? index / (visible.length - 1) : 0
+                    return (
+                      <div
+                        key={project.id}
+                        className="project-slide min-w-0 shrink-0 basis-[min(85vw,420px)]"
+                        style={{ '--cloth-index': clothIndex } as CSSProperties}
+                        data-active={isActive}
+                        aria-roledescription="slide"
+                        aria-label={`${index + 1} of ${visible.length}`}
+                      >
+                        <span className="cloth-peg" aria-hidden="true" />
+                        <ProjectCard project={project} index={index} onOpen={setSelected} />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           ) : (
@@ -197,7 +234,7 @@ export default function ProjectsSection() {
           {view === 'carousel' && (
             <div className="mt-8 flex items-center justify-between gap-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
-                Drag or use arrow keys
+                Move mouse to inspect · drag or arrow keys
               </span>
               <div className="flex gap-3">
                 <button

@@ -131,6 +131,31 @@
     ],
     "playwrightAudit": "local PASS / pending deploy approval"
   },
+  "block5": {
+    "status": "IMPLEMENTED LOCALLY",
+    "theme": "warm ink/paper tokens with preserved focus contrast",
+    "scrollAlive": [
+      "scroll-progress rail via animation-timeline: scroll(root)",
+      "view() reveals and staggered children",
+      "backdrop drift"
+    ],
+    "carousel": "hanging-cloth: pegs, pointer sway, active-cloth inspection; arrows and keyboard preserved",
+    "visuals": [
+      {
+        "file": "/thumbnails/beacon-local-capture.webp",
+        "label": "LOCAL APP CAPTURE · IN BUILD",
+        "source": "local dev server capture"
+      },
+      {
+        "file": "/thumbnails/retailnova-dashboard-1.webp",
+        "label": "REPO CAPTURE · STAGED DATA",
+        "source": "https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics",
+        "gallery": 5
+      }
+    ],
+    "githubDerivedProjects": "portfolio only — not services or proposals until infra + deliverable",
+    "playwrightAudit": "local PASS / pending deploy approval"
+  },
   "neverPublish": [
     "unverified hourly rate claims",
     "unverified uptime claims",

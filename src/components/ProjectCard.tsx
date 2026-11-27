@@ -59,6 +59,7 @@ export default function ProjectCard({ project, index, onOpen }: Props) {
             index={index}
             category={project.category}
             capture={project.capture}
+            visual={project.visual}
             stage={building ? 'IN BUILD' : 'LIVE PROOF · CAPTURE PENDING'}
           />
         </div>

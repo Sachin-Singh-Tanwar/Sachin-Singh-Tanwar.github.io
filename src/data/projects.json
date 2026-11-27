@@ -14,6 +14,12 @@
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/beacon-lead-scorer",
     "live": null,
+    "visual": {
+      "src": "/thumbnails/beacon-local-capture.webp",
+      "alt": "Beacon lead scorer local app landing page with company report form, captured from the running dev server.",
+      "label": "LOCAL APP CAPTURE · IN BUILD",
+      "source": null
+    },
     "category": "web",
     "status": "building",
     "year": 2026
@@ -33,6 +39,19 @@
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics",
     "live": null,
+    "visual": {
+      "src": "/thumbnails/retailnova-dashboard-1.webp",
+      "alt": "RetailNova Power BI executive dashboard from the project repository; dataset rows are STAGED.",
+      "label": "REPO CAPTURE · STAGED DATA",
+      "source": "https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics",
+      "gallery": [
+        "/thumbnails/retailnova-dashboard-2.webp",
+        "/thumbnails/retailnova-dashboard-3.webp",
+        "/thumbnails/retailnova-dashboard-4.webp",
+        "/thumbnails/retailnova-dashboard-5.webp",
+        "/thumbnails/retailnova-dashboard-6.webp"
+      ]
+    },
     "category": "tool",
     "status": "live",
     "year": 2026
