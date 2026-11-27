@@ -61,6 +61,33 @@ const rules: Rule[] = [
         line,
       ),
   },
+  {
+    id: 'fabricated-social-proof',
+    message: 'Fabricated logo, testimonial or client-count claims are forbidden.',
+    matches: (line) =>
+      /\b(client[ -]logo|logo[ -]strip|trusted[ -]by|as[ -]seen[ -]on)\b/i.test(line) ||
+      /\btestimonial\b/i.test(line) ||
+      /\b5[ -]similar[ -]projects\b/i.test(line) ||
+      /\b\d+\+?[ -](?:happy[ -])?clients?\b/i.test(line),
+  },
+  {
+    id: 'wcag3-claim',
+    message: 'Only WCAG 2.2-aligned practices may be claimed; no level-3 conformance claim.',
+    matches: (line) => /\bwcag\s*3\b/i.test(line) && /conform/i.test(line),
+  },
+  {
+    id: 'soft-nav-unlabelled',
+    message: 'Experimental soft-nav metrics must carry an explicit Experimental label.',
+    matches: (line) => /soft[\s-]?nav/i.test(line) && !/experimental/i.test(line),
+  },
+  {
+    id: 'cross-document-view-transition',
+    message: 'Cross-document view transitions are enhancement-only, never a shipped capability.',
+    matches: (line) =>
+      /cross[\s-]?document/i.test(line) &&
+      /view[\s-]?transition/i.test(line) &&
+      !/enhancement|only|\bnot\b/i.test(line),
+  },
 ]
 
 const findings: string[] = []

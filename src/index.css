@@ -171,3 +171,56 @@ input[data-palette-input]:focus-visible {
     animation: none !important;
   }
 }
+
+/* Block 4 — theme token demo: explicit fallback first, native path behind @supports. */
+.theme-token-demo {
+  background-color: #16161d;
+  color: #f5f5f5;
+  border-color: rgba(34, 211, 238, 0.3);
+}
+
+@supports (color: light-dark(#000000, #ffffff)) {
+  .theme-token-demo {
+    color-scheme: light dark;
+    background-color: light-dark(#f5f5f5, #16161d);
+    color: light-dark(#0b0b0d, #f5f5f5);
+    border-color: light-dark(#94a3b8, #22d3ee);
+  }
+}
+
+/* Entry/exit motion: enhancement only; reduced motion is handled above. */
+.motion-demo-panel {
+  opacity: 1;
+  transform: none;
+}
+
+@supports (transition-behavior: allow-discrete) {
+  .motion-demo-panel {
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  @starting-style {
+    details[open] .motion-demo-panel {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+}
+
+/* Open-state styling: :open native path, [open] fallback first. */
+.open-demo[open] > summary {
+  color: rgb(103 232 249);
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+@supports selector(details:open) {
+  .open-demo:open > summary {
+    color: rgb(103 232 249);
+    border-color: rgba(34, 211, 238, 0.4);
+  }
+}
+
+/* Focus ring on a light surface keeps a 2px outline with a light halo. */
+.focus-on-light:focus-visible {
+  outline-color: #0b0b0d;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
+}

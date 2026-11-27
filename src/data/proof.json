@@ -93,12 +93,48 @@
     "receiptsPanel": "IN BUILD",
     "architectureMap": "IN BUILD",
     "progressiveEnhancementMatrix": "IN BUILD",
-    "screenshotProofVault": "PLANNED",
+    "screenshotProofVault": "IN BUILD — 1 verified capture",
     "publicProofEndpoint": "PLANNED"
+  },
+  "block4": {
+    "status": "IMPLEMENTED LOCALLY",
+    "captures": [
+      {
+        "file": "/thumbnails/sentinel-board-2026-11-27.webp",
+        "date": "2026-11-27",
+        "source": "https://sachin-singh-tanwar.github.io/sentinel/#/board",
+        "pin": "214c3bcd…",
+        "observation": "five HEALTHY sources · incident #1 visible · STAGED DEMO labelled"
+      }
+    ],
+    "tallyCapture": "PENDING DATA GATE — no capture",
+    "syntheticCovers": 0,
+    "buildLabDemos": [
+      "visible focus token",
+      "focus trap",
+      "claim linter",
+      "@supports fallback",
+      "theme token light-dark()",
+      "entry/exit @starting-style",
+      "text scale control",
+      ":open state",
+      "search landmark",
+      "keyboard evidence"
+    ],
+    "wcagCopy": "WCAG 2.2-aligned practices",
+    "jsonLd": "Person + WebSite + ItemList + ProfilePage · verified facts only",
+    "claimLinterRulesAdded": [
+      "fabricated social proof guard",
+      "level-3 conformance guard",
+      "labelling for experimental soft-nav metrics",
+      "guard for cross-document enhancement claims"
+    ],
+    "playwrightAudit": "local PASS / pending deploy approval"
   },
   "neverPublish": [
     "unverified hourly rate claims",
     "unverified uptime claims",
-    "fabricated client or testimonial"
+    "fabricated social proof",
+    "synthetic project covers"
   ]
 }

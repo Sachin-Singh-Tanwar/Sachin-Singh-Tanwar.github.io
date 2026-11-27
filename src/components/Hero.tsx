@@ -77,7 +77,7 @@ export default function Hero() {
             One site, four targets — client conversion · engineering proof · agent/machine readability · skill demonstration
           </p>
           <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-            Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Receipts Panel · IN BUILD · Architecture Map · PLANNED
+            Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Receipts Panel · IN BUILD · Architecture Map · IN BUILD
           </p>
         </article>
 

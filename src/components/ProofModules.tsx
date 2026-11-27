@@ -113,41 +113,29 @@ const architectureNodes = [
 ]
 
 const enhancements = [
-  {
-    feature: '@scope',
-    baseline: 'Baseline 2026 Newly',
-    native: '@scope block',
-    fallback: 'Class selectors',
-    proof: 'web.dev Baseline 2026',
-  },
-  {
-    feature: 'contrast-color()',
-    baseline: 'Baseline 2026 Newly',
-    native: 'contrast-color()',
-    fallback: 'Explicit token',
-    proof: 'Chrome I/O 2026',
-  },
-  {
-    feature: 'animation-timeline: view()',
-    baseline: 'Baseline 2026 Newly',
-    native: 'view() reveal',
-    fallback: 'Static content',
-    proof: 'Live audit · 9 timelines',
-  },
-  {
-    feature: 'Anchor positioning',
-    baseline: 'MDN Newly / Bootstrap cautious',
-    native: 'position-anchor',
-    fallback: 'Absolute placement',
-    proof: 'Conflict note below',
-  },
-  {
-    feature: 'Container style queries',
-    baseline: 'Baseline 2026 Newly',
-    native: '@container style()',
-    fallback: '@media fallback',
-    proof: 'web.dev Baseline May 2026',
-  },
+  { feature: '@scope', baseline: 'Baseline 2026 Newly', native: '@scope block', fallback: 'Class selectors', proof: 'web.dev Baseline 2026' },
+  { feature: 'contrast-color()', baseline: 'Baseline 2026 Newly', native: 'contrast-color()', fallback: 'Explicit token', proof: 'Chrome I/O 2026' },
+  { feature: 'light-dark()', baseline: 'Widely', native: 'light-dark() token', fallback: 'Explicit token', proof: 'Chrome I/O 2026 · Bootstrap.build 2027' },
+  { feature: ':open', baseline: 'Baseline 2026 Newly', native: ':open styling', fallback: '[open] selector', proof: 'web.dev Baseline May 2026' },
+  { feature: '<search>', baseline: 'Widely', native: 'semantic landmark', fallback: 'form role=search', proof: 'web.dev Baseline Apr 2026' },
+  { feature: 'animation-timeline: view()', baseline: 'Baseline 2026 Newly', native: 'view() reveal', fallback: 'Static content', proof: 'Live audit · 9 timelines' },
+  { feature: '@starting-style', baseline: 'ENHANCEMENT ONLY', native: 'entry style', fallback: 'Static content', proof: 'Chrome I/O 2026' },
+  { feature: 'view-transition-name', baseline: 'Baseline 2025 Newly', native: 'same-document transition', fallback: 'Static sections', proof: 'MDN · same-document only; cross-document enhancement only' },
+  { feature: 'Anchor positioning', baseline: 'MDN Newly / Bootstrap cautious', native: 'position-anchor', fallback: 'Absolute placement', proof: 'Conflict note below' },
+  { feature: 'Container style queries', baseline: 'Baseline 2026 Newly', native: '@container style()', fallback: '@media fallback', proof: 'web.dev Baseline May 2026' },
+  { feature: 'rcap / rch / rex / ric', baseline: 'Baseline 2026 Newly', native: 'container units', fallback: 'px + clamp', proof: 'web.dev Baseline Jan 2026' },
+  { feature: 'Two-value display', baseline: 'Widely', native: 'display: inline flow-root', fallback: 'Single keyword', proof: 'web.dev Baseline Jan 2026' },
+  { feature: 'animation-composition', baseline: 'Widely', native: 'composition: add', fallback: 'Replace default', proof: 'web.dev Baseline Jan 2026' },
+  { feature: 'text-indent: each-line / hanging', baseline: 'Baseline 2026', native: 'keyword value', fallback: 'Standard text-indent', proof: 'web.dev Baseline 2026' },
+  { feature: 'shape()', baseline: 'Baseline 2026', native: 'clip-path: shape()', fallback: 'inset / polygon', proof: 'web.dev Baseline 2026' },
+  { feature: 'color-scheme', baseline: 'Widely', native: 'color-scheme: light dark', fallback: 'Explicit token', proof: 'MDN Baseline badge' },
+  { feature: 'field-sizing', baseline: 'Baseline 2026', native: 'field-sizing: content', fallback: 'Fixed height', proof: 'web.dev Baseline 2026' },
+  { feature: ':user-invalid', baseline: 'Widely', native: ':user-invalid', fallback: ':invalid + script', proof: 'web.dev Baseline May 2026' },
+  { feature: 'lh / rlh units', baseline: 'Widely', native: 'line-height units', fallback: 'rem units', proof: 'web.dev Baseline May 2026' },
+  { feature: 'text-wrap: balance', baseline: 'Widely', native: 'balance headings', fallback: 'Manual line breaks', proof: 'Bootstrap.build 2027' },
+  { feature: '@function() / CSS if()', baseline: 'ENHANCEMENT ONLY', native: 'guarded @supports demo', fallback: 'Static value', proof: 'Chrome I/O 2026' },
+  { feature: 'corner-shape() / sibling-index()', baseline: 'ENHANCEMENT ONLY', native: 'guarded @supports demo', fallback: 'Static layout', proof: 'Chrome I/O 2026' },
+  { feature: 'CrUX soft-nav metrics', baseline: 'Experimental', native: 'labelled only', fallback: 'Stable CWV labels', proof: 'web.dev Oct 2026 · experimental, not our metric' },
 ]
 
 function SectionHead({ index, title, note }: { index: string; title: string; note: string }) {
@@ -329,6 +317,8 @@ function FocusTrapDemo() {
 }
 
 function BuildLab() {
+  const [scale, setScale] = useState(1)
+
   return (
     <section
       id="build-lab"
@@ -366,7 +356,7 @@ function BuildLab() {
           <div className={`${CARD_SURFACE} min-w-0 p-6`}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">Claim linter</p>
             <pre className="mt-4 max-w-full overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-3 font-mono text-[11px] leading-relaxed text-cyan-200/85">
-              {`Claim lint OK — 21 shipped text files checked.`}
+              {`Claim lint OK — 22 shipped text files checked.`}
             </pre>
             <p className="mt-4 text-xs text-white/45">Build fails on forbidden Tally wording, fake rates and unlabelled STAGED copy.</p>
           </div>
@@ -376,6 +366,96 @@ function BuildLab() {
               Native when supported
             </div>
             <p className="mt-4 text-xs text-white/45">Same content, explicit fallback — no critical dependency.</p>
+          </div>
+
+          <div className={`${CARD_SURFACE} min-w-0 p-6`} data-demo="theme-token">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">Theme token · light-dark()</p>
+            <div className="theme-token-demo mt-4 rounded-lg border p-4 font-mono text-xs">
+              Native light-dark() when supported
+            </div>
+            <p className="mt-4 text-xs text-white/45">Explicit token fallback; no critical dependency on the native path.</p>
+          </div>
+
+          <details className={`${CARD_SURFACE} min-w-0 p-6`} data-demo="entry-exit">
+            <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Entry / exit motion · @starting-style
+            </summary>
+            <p className="motion-demo-panel mt-4 rounded-lg border border-white/10 p-4 text-xs text-white/60">
+              Entry style runs behind @supports with transition-behavior: allow-discrete. Reduced motion stays static.
+            </p>
+          </details>
+
+          <div className={`${CARD_SURFACE} min-w-0 p-6`} data-demo="text-scale">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">Text scale control</p>
+            <p className="mt-4 leading-relaxed text-white/70" style={{ fontSize: `${(0.9 * scale).toFixed(2)}rem` }}>
+              Resize this sample, then tab to the button — the focus ring stays visible.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setScale((value) => Math.min(1.4, Number((value + 0.1).toFixed(2))))}
+                className="rounded-md border border-white/15 px-3 py-1 font-mono text-[10px] uppercase"
+              >
+                Larger
+              </button>
+              <button
+                type="button"
+                onClick={() => setScale((value) => Math.max(0.8, Number((value - 0.1).toFixed(2))))}
+                className="rounded-md border border-white/15 px-3 py-1 font-mono text-[10px] uppercase"
+              >
+                Smaller
+              </button>
+            </div>
+            <p className="mt-4 text-xs text-white/45">
+              {`Explicit control fallback. ${'<meta name="text-scale">'} observed in Chrome I/O 2026, not enabled here.`}
+            </p>
+          </div>
+
+          <details className={`${CARD_SURFACE} open-demo min-w-0 p-6`} data-demo="open-state">
+            <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Open-state styling · :open
+            </summary>
+            <p className="mt-4 text-xs text-white/60">Native :open styling with an explicit [open] selector fallback.</p>
+          </details>
+
+          <search
+            aria-label="Build Lab demo search"
+            data-demo="search-landmark"
+            className={`${CARD_SURFACE} min-w-0 p-6`}
+          >
+            <label htmlFor="build-lab-search" className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Semantic search landmark
+            </label>
+            <input
+              id="build-lab-search"
+              type="search"
+              placeholder="Type to test focus"
+              className="mt-4 w-full rounded-md border border-white/15 bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/30"
+            />
+            <p className="mt-4 text-xs text-white/45">Native element with a form-role fallback; no external data.</p>
+          </search>
+
+          <div className={`${CARD_SURFACE} min-w-0 p-6 md:col-span-2`} data-a11y-evidence>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Keyboard evidence · WCAG 2.2-aligned practices
+            </p>
+            <ul className="mt-4 grid gap-2 text-xs text-white/65 sm:grid-cols-2">
+              <li>Tab order — header → hero → proof modules → contact · PASS</li>
+              <li>Focus ring — solid 2px, 2px offset, dark halo · PASS</li>
+              <li>Escape — command palette closes · PASS</li>
+              <li>Enter / Space — demo buttons activate · PASS</li>
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button type="button" className="focus-on-light rounded-md border px-3 py-1 bg-white text-xs text-black">
+                Focus on light
+              </button>
+              <button type="button" className="rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80">
+                Focus on dark
+              </button>
+            </div>
+            <p className="mt-4 text-xs text-white/45">
+              Local Playwright audit · 2026-11-27 · PASS. No level-3 conformance claim; no overlay.
+            </p>
           </div>
         </div>
       </div>
@@ -423,6 +503,20 @@ function ReceiptsPanel() {
             <p className="mt-3 font-mono text-sm text-white/80">0 STAGED numbers counted</p>
             <p className="mt-4 text-xs text-white/45">Replay rows never enter the denominator.</p>
           </article>
+          <figure className={`${CARD_SURFACE} min-w-0 p-4 md:col-span-2 lg:col-span-4`} data-capture="sentinel-board">
+            <img
+              src="/thumbnails/sentinel-board-2026-11-27.webp"
+              alt="Sentinel board captured 2026-11-27: five sources listed HEALTHY and incident #1 visible"
+              width="1280"
+              height="900"
+              loading="lazy"
+              className="w-full rounded-lg border border-white/10"
+            />
+            <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">
+              Captured 2026-11-27 · source: sachin-singh-tanwar.github.io/sentinel/#/board · pin 214c3bcd… ·
+              STAGED DEMO labelled on board
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
