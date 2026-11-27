@@ -23,7 +23,7 @@
     "title": "RetailNova Enterprise Analytics",
     "tagline": "SQL and Power BI analytics for a multi-channel retailer.",
     "problem": "Retail operations needed profitability, returns and logistics signals in one decision view.",
-    "solution": "Built MySQL and Python cleaning/EDA over staged CSV datasets, plus Power BI executive dashboards.",
+    "solution": "Built MySQL and Python cleaning/EDA over STAGED CSV datasets, plus Power BI executive dashboards.",
     "impact": "Shipped and live",
     "tech": [
       "MySQL",
@@ -59,7 +59,7 @@
   {
     "id": "autonomous-revenue-engine",
     "title": "Autonomous Revenue Engine",
-    "tagline": "24/7 worker that scans bounties and drafts bids with guardrails.",
+    "tagline": "Scheduled worker with approval gates for bounty scans and bid drafts.",
     "problem": "Finding and qualifying freelance work stalls as soon as the laptop closes, and paid APIs or proxies add cost before any return.",
     "solution": "Built a worker with Ollama triage, Apify data, systemd timers, Telegram digests and hard spend guardrails; a human sends every bid.",
     "impact": "In development",

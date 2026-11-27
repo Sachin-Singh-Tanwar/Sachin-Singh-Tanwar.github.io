@@ -28,17 +28,17 @@ const services = [
   {
     icon: <CodeIcon />,
     title: 'Web Development',
-    description: 'Fast, accessible interfaces with clean data flows and a design system that stays consistent.',
+    description: 'Accessible component systems, evidence pages, CI proof, and Core Web Vitals budgets.',
   },
   {
     icon: <DeviceIcon />,
     title: 'Data Pipelines',
-    description: 'Scheduled scrapers and extraction with clean output schemas and cost guards.',
+    description: 'Scheduled worker with approval gates, clean output schemas, and cost guards.',
   },
   {
     icon: <SparkIcon />,
     title: 'AI Automation',
-    description: 'Workers and agents that run on schedule, with guardrails and a human in the loop.',
+    description: 'Workers and agents with guardrails, a human in the loop, and a receipt for every run.',
   },
 ]
 

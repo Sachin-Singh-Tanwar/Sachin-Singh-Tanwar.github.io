@@ -1,15 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
+import { useEffect, useState } from 'react'
 import projectData from '../data/projects.json'
 import { projectSchema, type Project } from '../data/schema'
 import { CARD_SURFACE } from '../lib/surface'
 import { cn } from '../lib/cn'
-import ProjectCover from './ProjectCover'
-import ProjectModal from './ProjectModal'
 
 const projects: Project[] = projectData.map((item) => projectSchema.parse(item))
-const featured = projects[0]
-const shippedCount = projects.length
-const categories = Array.from(new Set(projects.map((project) => project.category)))
 const liveCount = projects.filter((project) => project.status === 'live').length
 const buildingCount = projects.filter((project) => project.status === 'building').length
 
@@ -25,43 +20,22 @@ function istTime() {
   }).format(new Date())
 }
 
+function StatusRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-1.5">
+      <span className="text-white/35">{label}</span>
+      <span className="text-right text-white/85">{value}</span>
+    </div>
+  )
+}
+
 export default function Hero() {
-  const [selected, setSelected] = useState<Project | null>(null)
-  const [clock, setClock] = useState('')
-  const closeModal = useCallback(() => setSelected(null), [])
-  const tiltRef = useRef<HTMLButtonElement>(null)
-  const glareRef = useRef<HTMLSpanElement>(null)
+  const [clock, setClock] = useState(() => istTime())
 
   useEffect(() => {
-    setClock(istTime())
     const id = window.setInterval(() => setClock(istTime()), 30000)
     return () => window.clearInterval(id)
   }, [])
-
-  const featuredIndex = useMemo(() => Math.max(0, projects.findIndex((item) => item.id === featured.id)), [])
-
-  const onFeatureMove = (event: ReactMouseEvent<HTMLButtonElement>) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const el = tiltRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const px = (event.clientX - rect.left) / rect.width
-    const py = (event.clientY - rect.top) / rect.height
-    el.style.transition = 'transform 90ms linear'
-    el.style.transform = `perspective(1000px) rotateX(${((0.5 - py) * 8).toFixed(2)}deg) rotateY(${((px - 0.5) * 8).toFixed(2)}deg) scale3d(1.01,1.01,1.01)`
-    if (glareRef.current) {
-      glareRef.current.style.opacity = '1'
-      glareRef.current.style.background = `radial-gradient(circle at ${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%, rgba(255,255,255,0.16), transparent 55%)`
-    }
-  }
-
-  const onFeatureLeave = () => {
-    const el = tiltRef.current
-    if (!el) return
-    el.style.transition = 'transform 500ms cubic-bezier(0.22,1,0.36,1)'
-    el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'
-    if (glareRef.current) glareRef.current.style.opacity = '0'
-  }
 
   const wrap = 'reveal-on-scroll col-span-12'
 
@@ -75,32 +49,33 @@ export default function Hero() {
           <h1
             data-pitch
             style={{ fontFamily: 'Inter, sans-serif' }}
-            className="mt-6 max-w-[900px] text-balance font-sans text-[56px] font-semibold leading-[0.95] tracking-[-0.045em] text-white md:text-[96px]"
+            className="mt-6 max-w-[900px] text-balance font-sans text-[52px] font-semibold leading-[0.98] tracking-[-0.045em] text-white md:text-[88px]"
           >
-            I build automation
-            <br className="hidden lg:block" /> that{' '}
-            <span
-              className="font-serif italic"
-              style={{ color: 'oklch(0.78 0.12 195)' }}
-            >
-              proves it ran
+            Web systems that{' '}
+            <span className="font-serif italic" style={{ color: 'oklch(0.78 0.12 195)' }}>
+              show the receipt.
             </span>
-            .
           </h1>
+          <p className="mt-6 max-w-[70ch] text-sm leading-relaxed text-white/60 md:text-base">
+            Fast, accessible builds with evidence attached — every claim links to a commit, test, or browser observation.
+          </p>
           <div className="mt-8 flex w-full flex-col items-start gap-4 sm:w-auto sm:flex-row sm:items-center">
             <a
               href="#projects"
-              className="w-full rounded-full bg-white px-7 py-3 text-center text-sm font-semibold text-black transition hover:bg-white/90 sm:w-auto"
+              className="w-full rounded-full bg-white px-7 py-3 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-white/90 sm:w-auto"
             >
-              See the work
+              See selected work
             </a>
             <a
-              href="#contact"
+              href="#services"
               className="border-b border-white/20 pb-0.5 font-mono text-[11px] uppercase tracking-[0.18em] text-white/60 transition hover:border-white/50 hover:text-white"
             >
-              Get in touch
+              See services
             </a>
           </div>
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+            Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Tally case study · PENDING DATA GATE
+          </p>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-6 md:p-8 lg:col-span-3')}>
@@ -110,94 +85,81 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-cyan)] opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent-cyan)]" />
             </span>
-            Available for Work
+            Available for work
           </div>
           <div className="mt-5 border-t border-white/10 pt-4 font-mono text-[10px] uppercase tracking-[0.18em]">
-            <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-white/35">Currently</span>
-              <span className="text-right text-white/85">building — see selected work</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-white/35">Response</span>
-              <span className="text-right text-white/85">within 24h</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-white/35">Local time</span>
-              <span className="tabular-nums text-right text-white/85">{clock || '—'} IST</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-white/35">Live projects</span>
-              <span className="tabular-nums text-right text-white/85">{liveCount}</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-white/35">In build</span>
-              <span className="tabular-nums text-right text-white/85">{buildingCount}</span>
-            </div>
+            <StatusRow label="Currently" value="building — see selected work" />
+            <StatusRow label="Response" value="within 24h" />
+            <StatusRow label="Local time" value={`${clock || '—'} IST`} />
+            <StatusRow label="Shipped proofs" value={String(liveCount)} />
+            <StatusRow label="In build" value={String(buildingCount)} />
+            <StatusRow label="STAGED NUMBERS COUNTED" value="0" />
           </div>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-6')}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Projects</p>
-          <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-cyan)]">
-            {shippedCount}
-          </p>
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
-            {liveCount} live
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Proof counters</p>
+          <p className="mt-4 font-mono text-[13px] leading-relaxed text-[var(--accent-cyan)]">
+            {liveCount} SHIPPED PROOFS · {buildingCount} IN BUILD · 0 STAGED NUMBERS COUNTED
           </p>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-6')}>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">Disciplines</p>
           <p className="mt-4 font-mono text-4xl font-bold tabular-nums text-[var(--accent-purple)]">
-            {categories.length}
+            {new Set(projects.map((project) => project.category)).size}
           </p>
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
-            {categories.join(' / ')}
+            {Array.from(new Set(projects.map((project) => project.category))).join(' / ')}
           </p>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-0 lg:col-span-8')}>
-          <button
-            ref={tiltRef}
-            type="button"
-            data-featured-card
-            onMouseMove={onFeatureMove}
-            onMouseLeave={onFeatureLeave}
-            onClick={() => setSelected(featured)}
-            aria-label={`Open featured project ${featured.title}`}
-            className="group relative flex min-h-[230px] w-full overflow-hidden rounded-2xl text-left"
+          <a
+            href="https://sachin-singh-tanwar.github.io/sentinel/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Sentinel board"
+            className="group grid min-h-[230px] w-full grid-cols-1 text-left sm:grid-cols-2"
           >
-            <span
-              ref={glareRef}
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300"
-            />
-            <span className="relative block w-1/2 shrink-0 overflow-hidden bg-[#08080a]">
-              <span className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.03]">
-                <ProjectCover index={featuredIndex} category={featured.category} capture={featured.capture} />
-              </span>
-            </span>
-            <span className="flex w-1/2 flex-col justify-center p-6">
+            <span className="flex flex-col justify-between gap-8 border-b border-white/10 p-6 sm:border-b-0 sm:border-r">
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-                Featured / 01
+                WEB PROOF / FEATURED 01
               </span>
-              <span className="mt-3 text-xl font-semibold text-[var(--text-primary)]">{featured.title}</span>
-              <span className="mt-1 text-sm text-[var(--text-muted)]">{featured.tagline}</span>
-              <span className="mt-4 flex flex-wrap gap-2">
-                {featured.tech.slice(0, 3).map((tech) => (
-                  <span key={tech} className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] text-white/60">
-                    {tech}
-                  </span>
-                ))}
+              <span>
+                <span className="block font-mono text-5xl font-bold tabular-nums text-[var(--accent-cyan)]">5/5</span>
+                <span className="mt-2 block font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
+                  HEALTHY
+                </span>
               </span>
-              <span className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
-                Open case study
-              </span>
-              <span className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
-                {featured.status} · {featured.year} · {featured.tech[0]}
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
+                WEB PROOF · 5/5 HEALTHY · 0 SCHEMA FAILURES · STAGED REPLAY LABELLED
               </span>
             </span>
-          </button>
+            <span className="flex flex-col justify-center p-6">
+              <span className="text-xl font-semibold text-[var(--text-primary)]">Sentinel</span>
+              <span className="mt-2 text-sm text-[var(--text-muted)]">
+                Board-level proof for versioned extractors, with STAGED replays kept out of repair claims.
+              </span>
+              <span className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] text-white/60">
+                  0 schema failures
+                </span>
+                <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] text-white/60">
+                  0 required nulls
+                </span>
+                <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] text-white/60">
+                  VIEW INCIDENT #1
+                </span>
+              </span>
+              <span className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
+                configured + sealed + validated · repair-certified: books only
+              </span>
+              <span className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-cyan-200/80 transition group-hover:text-cyan-100">
+                Open Sentinel board
+              </span>
+            </span>
+          </a>
         </article>
 
         <article className={cn(CARD_SURFACE, wrap, 'p-6 lg:col-span-4')}>
@@ -212,13 +174,6 @@ export default function Hero() {
           </div>
         </article>
       </div>
-      {selected && (
-        <ProjectModal
-          project={selected}
-          index={Math.max(0, projects.findIndex((item) => item.id === selected.id))}
-          onClose={closeModal}
-        />
-      )}
     </section>
   )
 }

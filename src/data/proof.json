@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "lane": "portfolio-v3 / redesign/2026-proof",
+  "sourceOfTruth": [
+    "PORTFOLIO-RESEARCH-2026-2027.md",
+    "PARTNER-PROGRESS.md"
+  ],
+  "sentinel": {
+    "board": "5/5 HEALTHY",
+    "schemaFailures": 0,
+    "requiredNulls": 0,
+    "repair_certified_sources": ["books"],
+    "other_sources": "configured + sealed + validated",
+    "tests": {
+      "passed": 48,
+      "durationSeconds": null,
+      "durationStatus": "unverified",
+      "durationNote": "Brief records 67.86s; progress log records 96.89s. Reconcile before publishing a duration."
+    },
+    "commits": {
+      "main": "214c3bcd5d2f87a4171db4a9d2cd3973e7fb54bc",
+      "data": "bc53ad8739f48a8779109a4f8e233f60b11406f5"
+    },
+    "incidents": {
+      "verified": [1],
+      "invalidated": [4, 5, 6],
+      "detail": "CLOSED — no repair performed"
+    },
+    "STAGED_DEMO": {
+      "label": "STAGED DEMO",
+      "replay": "append-only",
+      "countedInUptime": false
+    }
+  },
+  "tally": {
+    "status": "pending data gate",
+    "gate": "2026-12-01: 15:05Z + 15:35Z",
+    "wording": "scheduled audit — external trigger",
+    "countedInPortfolioUntilGate": false
+  },
+  "planned": {
+    "evidenceWorkbench": "IN BUILD",
+    "capabilityMatrix": "IN BUILD",
+    "buildLab": "IN BUILD",
+    "receiptsPanel": "IN BUILD",
+    "architectureMap": "PLANNED",
+    "progressiveEnhancementMatrix": "PLANNED",
+    "tallyCaseStudy": "PENDING DATA GATE",
+    "ledgerMirror": "BLOCKED — LEDGER.csv missing",
+    "backup": "BLOCKED — replacement rclone client id needed",
+    "centralHubAbxyz": "PLANNED — decision 20 Dec"
+  },
+  "neverPublish": [
+    "unverified hourly rate claims",
+    "unverified uptime claims",
+    "fabricated client or testimonial"
+  ]
+}

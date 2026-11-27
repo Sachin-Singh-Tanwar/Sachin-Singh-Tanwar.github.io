@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prebuild": "tsx scripts/check-claims.ts",
     "lint": "oxlint",
     "preview": "vite preview",
-    "validate": "tsx scripts/validate-projects.ts"
+    "validate": "tsx scripts/validate-projects.ts",
+    "prevalidate": "tsx scripts/check-claims.ts",
+    "check:claims": "tsx scripts/check-claims.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
