@@ -45,10 +45,9 @@
     "receiptsPanel": "IN BUILD",
     "architectureMap": "PLANNED",
     "progressiveEnhancementMatrix": "PLANNED",
-    "tallyCaseStudy": "PENDING DATA GATE",
-    "ledgerMirror": "BLOCKED — LEDGER.csv missing",
-    "backup": "BLOCKED — replacement rclone client id needed",
-    "centralHubAbxyz": "PLANNED — decision 20 Dec"
+    "screenshotProofVault": "PLANNED",
+    "publicProofEndpoint": "PLANNED",
+    "additionalCaseStudies": "PENDING VERIFIED PROOF"
   },
   "neverPublish": [
     "unverified hourly rate claims",

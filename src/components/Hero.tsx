@@ -74,7 +74,7 @@ export default function Hero() {
             </a>
           </div>
           <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-            Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Tally case study · PENDING DATA GATE
+            Evidence Workbench · IN BUILD · Build Lab · IN BUILD · Receipts Panel · IN BUILD · Architecture Map · PLANNED
           </p>
         </article>
 
