@@ -67,7 +67,7 @@
     "tagline": "Chrome extension that checks a page against a Django API.",
     "problem": "Users cannot quickly tell whether the page in front of them is legitimate or a phishing site.",
     "solution": "Built a Chrome popup that sends the current URL to a hosted Django REST endpoint and shows a safe or phishing verdict.",
-    "impact": "Live API demo — public endpoint",
+    "impact": "Live public demo — enter a URL",
     "tech": [
       "Django",
       "Django REST Framework",
@@ -75,7 +75,7 @@
       "Chrome Extension"
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/phishing-detector",
-    "live": "https://phishing-detector-nhel.onrender.com/api/https://google.com",
+    "live": "https://sachin-singh-tanwar.github.io/phishing/",
     "category": "tool",
     "status": "live",
     "year": 2026

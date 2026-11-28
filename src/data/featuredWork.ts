@@ -82,15 +82,15 @@ export const featuredWork: FeaturedWork[] = [
     type: 'Browser tool',
     summary: 'A quick verdict on the page in front of you.',
     detail:
-      'A Chrome popup sends the active URL to a Django REST endpoint and returns a clear verdict. The public link opens the API demo; the service has no marketing page.',
+      'A Chrome popup sends the active URL to a Django REST endpoint and returns a clear verdict. The public link opens a small input demo that calls the same endpoint.',
     diagram: {
       from: 'Chrome popup',
       to: 'Django REST API',
       result: 'Clear verdict',
     },
     tags: ['Django', 'Django REST', 'JavaScript', 'Chrome API'],
-    href: 'https://phishing-detector-nhel.onrender.com/api/https://google.com',
-    hrefLabel: 'Open API demo',
+    href: 'https://sachin-singh-tanwar.github.io/phishing/',
+    hrefLabel: 'Open demo',
   },
 ]
 
