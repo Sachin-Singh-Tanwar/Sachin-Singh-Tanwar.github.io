@@ -78,6 +78,7 @@ export default function ContactSection() {
           data-scroll-offset="0.22"
         >
           <a href="https://github.com/Sachin-Singh-Tanwar" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="/proof/">Proof</a>
           <a href="https://www.linkedin.com/in/sachin-singh-tanwar-5582582b4" target="_blank" rel="noreferrer">LinkedIn</a>
           <a href={`mailto:${EMAIL}`}>Email</a>
         </div>
