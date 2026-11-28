@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <meta name="robots" content="index,follow" />
+    <title>Public Proof — Sachin Singh Tanwar</title>
+    <meta
+      name="description"
+      content="Public, verifiable work: live demos, public source repositories and clearly labelled staged artifacts. No client revenue, logos or testimonials claimed."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --ink: #141511;
+        --accent: #c9502a;
+        --deep: #14231f;
+        --line: #d6d1c4;
+        --muted: #6d6b62;
+        --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { min-height: 100%; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 76px 0 104px;
+      }
+
+      .eyebrow {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      h1 {
+        margin: 14px 0 12px;
+        max-width: 18ch;
+        font-size: clamp(40px, 6.4vw, 68px);
+        font-weight: 640;
+        letter-spacing: -0.04em;
+        line-height: 1.01;
+      }
+
+      .lede {
+        margin: 0;
+        max-width: 62ch;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .rule {
+        height: 1px;
+        margin: 40px 0 28px;
+        background: var(--line);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        min-height: 250px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        background: #f8f6f0;
+        transition: transform 260ms ease, border-color 260ms ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: var(--ink);
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font: 10px var(--font-mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .index { color: var(--accent); }
+
+      .tag {
+        padding: 3px 7px;
+        border: 1px solid currentColor;
+      }
+
+      .card h2 {
+        margin: 22px 0 8px;
+        font-size: 22px;
+        font-weight: 620;
+        letter-spacing: -0.025em;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .cap {
+        margin-top: 10px !important;
+        font-family: var(--font-mono);
+        font-size: 11px !important;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: auto;
+        padding-top: 22px;
+        font: 11px var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .links a {
+        color: var(--deep);
+        text-underline-offset: 3px;
+      }
+
+      .links a:hover { color: var(--accent); }
+
+      .limits {
+        margin-top: 48px;
+        padding: 28px;
+        border-left: 4px solid var(--deep);
+        background: #f8f6f0;
+      }
+
+      .limits h2 {
+        margin: 0 0 14px;
+        font-size: 18px;
+        font-weight: 620;
+        letter-spacing: -0.02em;
+      }
+
+      .limits ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 34px;
+        font: 11px var(--font-mono);
+        color: var(--muted);
+      }
+
+      .foot a { color: var(--deep); text-underline-offset: 3px; }
+      .foot a:hover { color: var(--accent); }
+
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      @media (max-width: 720px) {
+        .shell { width: min(100% - 28px, 1080px); padding-top: 52px; }
+        .grid { grid-template-columns: 1fr; }
+        .card { min-height: 0; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; animation: none !important; }
+        .card:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <p class="eyebrow">Public proof · verifiable links</p>
+      <h1>Work you can open and check.</h1>
+      <p class="lede">
+        Every item below is a public artifact you can inspect yourself. This page does not present client logos,
+        revenue numbers, testimonials or a delivery count. Labels such as STAGED DEMO and SCHEDULED AUDIT are kept
+        visible on purpose.
+      </p>
+
+      <div class="rule"></div>
+
+      <section class="grid" aria-label="Public artifacts">
+        <article class="card">
+          <div class="card-top"><span class="index">01</span><span class="tag">Staged demo</span></div>
+          <h2>Sentinel Board</h2>
+          <p>
+            Public incident board with a collapsible timeline. The board is explicitly labelled STAGED DEMO;
+            no uptime percentage or live-client status is claimed.
+          </p>
+          <p class="cap">repair-certified → books only · other sources → configured + sealed + validated</p>
+          <div class="links">
+            <a href="https://sachin-singh-tanwar.github.io/sentinel/">Open board</a>
+            <a href="https://github.com/Sachin-Singh-Tanwar/sentinel">Source</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="index">02</span><span class="tag">Repo capture · staged data</span></div>
+          <h2>RetailNova Analytics</h2>
+          <p>
+            MySQL, Python cleaning and EDA over staged CSV datasets, with Power BI dashboards. The repository is
+            public; the data is staged, not client data.
+          </p>
+          <p class="cap">configured + sealed + validated</p>
+          <div class="links">
+            <a href="https://github.com/Sachin-Singh-Tanwar/RetailNova-Enterprise-Analytics">Open source</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="index">03</span><span class="tag">Live input demo</span></div>
+          <h2>Phishing Detector</h2>
+          <p>
+            Enter a URL and read the verdict returned by the public Django REST endpoint. If the checker cannot
+            reach a site, the demo returns UNAVAILABLE instead of a guessed verdict.
+          </p>
+          <div class="links">
+            <a href="https://sachin-singh-tanwar.github.io/phishing/">Open demo</a>
+            <a href="https://github.com/Sachin-Singh-Tanwar/phishing-detector">Source</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="index">04</span><span class="tag">Scheduled audit</span></div>
+          <h2>Tally</h2>
+          <p>
+            Scheduled audit — external trigger (cron-job.org). This is not a live or real-time status claim,
+            and no current-state result is presented here.
+          </p>
+          <div class="links">
+            <a href="https://sachin-singh-tanwar.github.io/tally/">Open page</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="index">05</span><span class="tag">Live demo · device captures</span></div>
+          <h2>Beacon Lead Scorer</h2>
+          <p>
+            Public URL with real desktop, tablet and mobile captures. The demo researches a public company page
+            and returns a scored report with sources.
+          </p>
+          <div class="links">
+            <a href="https://beacon-lead-scorer.vercel.app/">Open demo</a>
+            <a href="https://github.com/Sachin-Singh-Tanwar/beacon-lead-scorer">Source</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="index">06</span><span class="tag">Shipped site</span></div>
+          <h2>Portfolio</h2>
+          <p>
+            The public site itself, with source-linked work, staged-labelled telemetry and a command palette.
+            No private client work is shown.
+          </p>
+          <div class="links">
+            <a href="/">Open portfolio</a>
+            <a href="https://github.com/Sachin-Singh-Tanwar/Sachin-Singh-Tanwar.github.io">Source</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="limits" aria-labelledby="limits-title">
+        <h2 id="limits-title">What this page does not claim</h2>
+        <ul>
+          <li>client revenue, receipts, escrow or payment confirmation</li>
+          <li>private client logos, names or testimonials</li>
+          <li>a delivery count or an hourly rate</li>
+          <li>real-time Tally status</li>
+          <li>repair-certified status outside books</li>
+          <li>synthetic covers or invented metrics</li>
+        </ul>
+      </section>
+
+      <p class="foot">
+        <a href="/">← Portfolio</a>
+        <a href="/phishing/">Phishing demo</a>
+        <a href="https://github.com/Sachin-Singh-Tanwar">GitHub</a>
+      </p>
+    </main>
+  </body>
+</html>
