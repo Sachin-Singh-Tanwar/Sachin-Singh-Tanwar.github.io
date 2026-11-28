@@ -66,8 +66,8 @@ Naye rules:
 - `proof.json` me `receipts` section ko research ke exact values se align karna:
   - Sentinel `48 passed` ✓.
   - Duration conflict `67.86s` brief / `96.89s` log → `unverified` (publish nahi).
-  - Commits `214c3bcd…`, `bc53ad87…` unchanged.
-  - Tally `PENDING DATA GATE` until `15:05Z + 15:35Z`.
+  - Live heads after Step 3: main `6cd7253…`, data `d997ea22…`; stored capture pin `214c3bcd…` unchanged until a new visual capture is made.
+  - Tally read-only schedule proof recovered: actions `45845546152`, `45850606650`; data commits `cc2bd163…`, `171eaa7e…`; rows `63 → 66 → 69`. Wording cap unchanged: `scheduled audit — external trigger (cron-job.org)`.
   - STAGED rows uptime denominator se bahar.
 
 ---

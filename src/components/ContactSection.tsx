@@ -1,52 +1,89 @@
-const links = [
-  { label: 'sachin.singh.tanwar325@gmail.com', href: 'mailto:sachin.singh.tanwar325@gmail.com', primary: true },
-  {
-    label: 'GitHub',
-    href: 'https://github.com/Sachin-Singh-Tanwar',
-    primary: false,
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/sachin-singh-tanwar-5582582b4',
-    primary: false,
-  },
-]
+import { useEffect, useRef, useState } from 'react'
+import { EMAIL, copyEmail, requestReshatter } from '../lib/siteActions'
+import { fracturePaths } from '../lib/fracturePaths'
 
 export default function ContactSection() {
+  const [copied, setCopied] = useState(false)
+  const resetTimer = useRef(0)
+
+  useEffect(() => {
+    const sync = () => {
+      setCopied(true)
+      window.clearTimeout(resetTimer.current)
+      resetTimer.current = window.setTimeout(() => setCopied(false), 1600)
+    }
+    window.addEventListener('site:email-copied', sync)
+    return () => {
+      window.removeEventListener('site:email-copied', sync)
+      window.clearTimeout(resetTimer.current)
+    }
+  }, [])
+
+  const handleCopy = async () => {
+    await copyEmail()
+  }
+
   return (
-    <section
-      id="contact"
-      className="border-t border-white/5 px-5 py-24 md:px-8 md:py-32"
-    >
-      <div className="reveal-on-scroll mx-auto max-w-4xl text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyan-300/80">
-          03 — Contact
-        </p>
-        <h2 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-6xl">
-          Let&apos;s build something.
-        </h2>
-        <p className="mx-auto mt-5 max-w-xl text-base text-white/60">
-          If you need systems that keep working after the laptop is off, send a note.
-        </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              {...(link.label === 'Email' ? {} : { target: '_blank', rel: 'noreferrer' })}
-              className={`break-all rounded-full px-7 py-3 text-sm font-semibold transition ${
-                link.primary
-                  ? 'bg-white text-black hover:bg-white/90'
-                  : 'border border-white/20 text-white hover:border-cyan-300/60 hover:text-cyan-200'
-              }`}
-            >
-              {link.label}
-            </a>
+    <section id="contact" className="section contact-section" data-scroll-progress data-scroll-section>
+      <div
+        className="contact-panel contact-console"
+        data-reveal
+        data-scroll-progress
+        data-scroll-detail
+        data-scroll-offset="0.08"
+      >
+        <svg className="contact-kintsugi" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+          {fracturePaths.map((d) => (
+            <path key={d} pathLength="100" d={d} />
           ))}
+        </svg>
+
+        <p className="section-index section-index-light">03 / Contact</p>
+        <h2>Let’s make the next build count.</h2>
+        <p className="contact-copy">
+          Tell me what you need built. I’ll look at the scope and reply with a clear next step.
+        </p>
+        <div className="contact-actions">
+          <a href={`mailto:${EMAIL}`} className="button button-light">
+            Start a conversation <span aria-hidden="true">↗</span>
+          </a>
+          <button
+            type="button"
+            className="copy-email"
+            data-copied={copied}
+            onClick={() => void handleCopy()}
+          >
+            <span>{copied ? 'Copied to clipboard' : 'Copy email'}</span>
+            <i aria-hidden="true" />
+            <span className="copy-spark copy-spark--one" aria-hidden="true" />
+            <span className="copy-spark copy-spark--two" aria-hidden="true" />
+          </button>
+        </div>
+        <p className="contact-email" aria-hidden="true">{EMAIL}</p>
+        <div className="copy-toast" role="status" aria-live="polite" data-visible={copied}>
+          Copied to clipboard
         </div>
       </div>
-      <footer className="mx-auto mt-24 max-w-7xl border-t border-white/5 pt-8 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-white/30">
-        © 2026 Sachin Singh Tanwar
+
+      <footer
+        className="site-footer kintsugi-footer"
+        data-scroll-progress
+        data-scroll-detail
+        data-scroll-offset="0.16"
+      >
+        <span>© 2026 Sachin Singh Tanwar</span>
+        <div
+          data-scroll-progress
+          data-scroll-detail
+          data-scroll-offset="0.22"
+        >
+          <a href="https://github.com/Sachin-Singh-Tanwar" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/sachin-singh-tanwar-5582582b4" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href={`mailto:${EMAIL}`}>Email</a>
+        </div>
+        <button type="button" className="reshatter-trigger" onClick={requestReshatter}>
+          <span aria-hidden="true">◆</span> [ RE-SHATTER SYSTEM ]
+        </button>
       </footer>
     </section>
   )

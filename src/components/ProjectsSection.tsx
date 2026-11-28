@@ -1,271 +1,394 @@
 import {
-  useCallback,
+  type CSSProperties,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
 } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import projectData from '../data/projects.json'
-import { projectSchema, type Project } from '../data/schema'
-import ProjectCard from './ProjectCard'
-import ProjectModal from './ProjectModal'
+import { featuredWork, type FeaturedWork, type Viewport } from '../data/featuredWork'
+import { playTick } from '../lib/audioBus'
+import { usePointerTilt } from '../lib/usePointerTilt'
+import { useProjectRoute } from '../lib/useProjectRoute'
 
-const projects: Project[] = projectData.map((item) => projectSchema.parse(item))
+type Filter = 'All' | FeaturedWork['category']
 
-const FILTERS = ['All', 'Automation', 'Web', 'API', 'Tool'] as const
-type Filter = (typeof FILTERS)[number]
-type View = 'carousel' | 'grid'
+const filters: Filter[] = ['All', ...Array.from(new Set(featuredWork.map((item) => item.category)))]
+const projectIds = featuredWork.map((item) => item.id)
+const viewportWidth: Record<Viewport, number> = { desktop: 100, tablet: 72, mobile: 46 }
 
-const CATEGORY: Record<Exclude<Filter, 'All'>, Project['category']> = {
-  Automation: 'automation',
-  Web: 'web',
-  API: 'api',
-  Tool: 'tool',
+// Mirrors the CSS breakpoints: the capture follows the device actually in use.
+function detectViewport(): Viewport {
+  if (window.innerWidth <= 760) return 'mobile'
+  if (window.innerWidth <= 1024) return 'tablet'
+  return 'desktop'
 }
 
-const COUNTS: Record<Filter, number> = {
-  All: projects.length,
-  Automation: projects.filter((project) => project.category === 'automation').length,
-  Web: projects.filter((project) => project.category === 'web').length,
-  API: projects.filter((project) => project.category === 'api').length,
-  Tool: projects.filter((project) => project.category === 'tool').length,
+function mediaFor(item: FeaturedWork, viewport: Viewport) {
+  return {
+    src: item.imageByViewport?.[viewport] ?? item.image,
+    label: item.imageLabelByViewport?.[viewport] ?? item.imageLabel,
+    aspect: item.imageAspectByViewport?.[viewport] ?? '16 / 9',
+  }
+}
+
+function Media({ item, viewport = 'desktop' }: { item: FeaturedWork; viewport?: Viewport }) {
+  const media = mediaFor(item, viewport)
+  if (media.src) {
+    return <img src={media.src} alt={item.imageAlt ?? item.title} loading="lazy" decoding="async" />
+  }
+  if (item.diagram) {
+    return (
+      <div
+        className="preview-diagram"
+        aria-label={`${item.diagram.from} to ${item.diagram.to} gives ${item.diagram.result}`}
+      >
+        <span>{item.diagram.from}</span>
+        <i aria-hidden="true">→</i>
+        <span>{item.diagram.to}</span>
+        <i aria-hidden="true">→</i>
+        <span className="diagram-result">{item.diagram.result}</span>
+      </div>
+    )
+  }
+  return null
+}
+
+function DeviceFrame({
+  item,
+  viewport,
+  children,
+}: {
+  item: FeaturedWork
+  viewport: Viewport
+  children: ReactNode
+}) {
+  const media = mediaFor(item, viewport)
+  return (
+    <div
+      className={`device-frame device-frame--${viewport}`}
+      data-viewport={viewport}
+      data-tilt
+      style={{ '--capture-aspect': media.aspect } as CSSProperties}
+    >
+      <div className="device-frame__bezel">
+        <div className="preview-media" data-viewport={viewport}>
+          {children}
+          {media.label && <span className="preview-label">{media.label}</span>}
+        </div>
+      </div>
+      <span className="device-frame__chin" aria-hidden="true" />
+    </div>
+  )
 }
 
 export default function ProjectsSection() {
-  const [view, setView] = useState<View>('carousel')
   const [filter, setFilter] = useState<Filter>('All')
-  const [progress, setProgress] = useState(0)
-  const [slidesInView, setSlidesInView] = useState<number[]>([])
-  const [canPrev, setCanPrev] = useState(false)
-  const [canNext, setCanNext] = useState(true)
-  const [selected, setSelected] = useState<Project | null>(null)
-  const viewportRef = useRef<HTMLDivElement | null>(null)
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: 'start',
-    containScroll: 'trimSnaps',
-  })
+  const [activeId, setActiveId] = useState(featuredWork[0].id)
+  const [viewportOverride, setViewportOverride] = useState<Viewport | null>(null)
+  const [autoViewport, setAutoViewport] = useState<Viewport>(() => detectViewport())
+  const viewport = viewportOverride ?? autoViewport
+  const [lens, setLens] = useState({ x: 50, y: 50, active: false })
+  const [shattering, setShattering] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  const openButtonRef = useRef<HTMLButtonElement>(null)
+  const detailHeadingRef = useRef<HTMLHeadingElement>(null)
+  const openTimer = useRef(0)
+  const wasOpenRef = useRef(false)
+  const { detailId, openProject, closeProject } = useProjectRoute(projectIds)
+  usePointerTilt(previewRef)
+
+  useEffect(() => {
+    const update = () => setAutoViewport(detectViewport())
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   const visible = useMemo(
-    () =>
-      filter === 'All'
-        ? projects
-        : projects.filter((project) => project.category === CATEGORY[filter]),
+    () => (filter === 'All' ? featuredWork : featuredWork.filter((item) => item.category === filter)),
     [filter],
   )
 
-  const sync = useCallback(() => {
-    if (!emblaApi) return
-    setProgress(emblaApi.scrollProgress())
-    setSlidesInView(emblaApi.slidesInView())
-    setCanPrev(emblaApi.canScrollPrev())
-    setCanNext(emblaApi.canScrollNext())
-  }, [emblaApi])
+  const active = visible.find((item) => item.id === activeId) ?? visible[0] ?? featuredWork[0]
+  const detail = detailId ? featuredWork.find((item) => item.id === detailId) ?? null : null
+
+  useEffect(() => () => window.clearTimeout(openTimer.current), [])
 
   useEffect(() => {
-    if (!emblaApi) return
-    sync()
-    emblaApi.on('scroll', sync).on('select', sync).on('reInit', sync).on('slidesInView', sync)
-    return () => {
-      emblaApi.off('scroll', sync).off('select', sync).off('reInit', sync).off('slidesInView', sync)
+    if (detail) {
+      wasOpenRef.current = true
+      const frame = window.requestAnimationFrame(() => detailHeadingRef.current?.focus())
+      return () => window.cancelAnimationFrame(frame)
     }
-  }, [emblaApi, sync])
-
-  useEffect(() => {
-    if (!emblaApi) return
-    emblaApi.reInit()
-    emblaApi.scrollTo(0, true)
-  }, [filter, emblaApi])
-
-  useEffect(() => {
-    if (view !== 'carousel' || !emblaApi) return
-    emblaApi.reInit()
-    sync()
-  }, [view, emblaApi, sync])
-
-  const activeIndex =
-    visible.length > 1
-      ? Math.min(visible.length - 1, Math.max(0, Math.round(progress * (visible.length - 1))))
-      : 0
-
-  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      emblaApi?.scrollPrev()
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false
+      openButtonRef.current?.focus()
     }
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      emblaApi?.scrollNext()
-    }
+  }, [detail])
+
+  const transition = (update: () => void) => {
+    const doc = document as Document & { startViewTransition?: (callback: () => void) => void }
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (doc.startViewTransition && !reduced) doc.startViewTransition(update)
+    else update()
   }
 
-  const handleClothMove = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const node = viewportRef.current
-    if (!node) return
-    const rect = node.getBoundingClientRect()
-    if (rect.width === 0 || rect.height === 0) return
-    node.style.setProperty('--pointer-x', ((event.clientX - rect.left) / rect.width).toFixed(3))
-    node.style.setProperty('--pointer-y', ((event.clientY - rect.top) / rect.height - 0.5).toFixed(3))
+  const handleOpen = () => {
+    window.clearTimeout(openTimer.current)
+    playTick()
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      transition(() => openProject(active.id))
+      return
+    }
+    setShattering(true)
+    openTimer.current = window.setTimeout(() => {
+      setShattering(false)
+      transition(() => openProject(active.id))
+    }, 180)
   }
 
-  const resetCloth = () => {
-    const node = viewportRef.current
-    if (!node) return
-    node.style.setProperty('--pointer-x', '0.5')
-    node.style.setProperty('--pointer-y', '0')
+  const handleClose = () => transition(() => closeProject())
+
+  const handleListKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+    const buttons = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>('[data-work-item]') ?? [])
+    if (buttons.length === 0) return
+    const current = buttons.findIndex((button) => button.dataset.id === active.id)
+    let next = current
+    if (event.key === 'ArrowDown') next = (current + 1) % buttons.length
+    if (event.key === 'ArrowUp') next = (current - 1 + buttons.length) % buttons.length
+    if (event.key === 'Home') next = 0
+    if (event.key === 'End') next = buttons.length - 1
+    event.preventDefault()
+    buttons[next].focus()
+    setActiveId(buttons[next].dataset.id ?? featuredWork[0].id)
   }
 
-  const closeModal = useCallback(() => setSelected(null), [])
+  const handleLensMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    setLens({
+      x: ((event.clientX - rect.left) / rect.width) * 100,
+      y: ((event.clientY - rect.top) / rect.height) * 100,
+      active: true,
+    })
+  }
+
+  const viewportValue = viewportWidth[viewport]
 
   return (
-    <section id="projects" className="scroll-mt-14 border-t border-white/5 px-5 py-24 md:px-8 md:py-32">
-      <div className="mx-auto max-w-7xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-          01 — Selected Work
-        </p>
-        <div className="mt-4 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <h2 className="max-w-[18ch] text-3xl font-bold leading-[1.08] tracking-[-0.03em] sm:text-5xl">
-            Systems built to run without supervision.
-          </h2>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter projects by category">
-              {FILTERS.map((item) => (
+    <section id="work" className="section work-section" data-scroll-progress data-scroll-section>
+      <div
+        className="section-head"
+        data-reveal
+        data-scroll-progress
+        data-scroll-detail
+        data-scroll-offset="0.04"
+      >
+        <p className="section-index">01 / Selected work</p>
+        <div className="section-head-row">
+          <h2>Work that holds up in delivery.</h2>
+          <p>Browse by discipline. Open any project to see the live surface.</p>
+        </div>
+      </div>
+
+      {detail ? (
+        <article className="project-detail" aria-labelledby="project-detail-title">
+          <span className="detail-split detail-split--left" aria-hidden="true" />
+          <span className="detail-split detail-split--right" aria-hidden="true" />
+          <button type="button" className="detail-back" onClick={handleClose}>
+            <span aria-hidden="true">←</span> All work
+          </button>
+          <div className="detail-grid">
+            <div className="detail-copy">
+              <p className="section-index">
+                {detail.no} / {detail.type}
+              </p>
+              <h3 id="project-detail-title" ref={detailHeadingRef} tabIndex={-1}>
+                {detail.title}
+              </h3>
+              <p className="detail-lede">{detail.summary}</p>
+              <p className="detail-body">{detail.detail}</p>
+              <div className="tag-row">
+                {detail.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+              <a href={detail.href} target="_blank" rel="noreferrer" className="text-link">
+                {detail.hrefLabel} <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+
+            <div className="detail-media">
+              <DeviceFrame item={detail} viewport={viewport}>
+                <Media item={detail} viewport={viewport} />
+              </DeviceFrame>
+            </div>
+          </div>
+        </article>
+      ) : (
+        <div className="work-explorer" ref={previewRef}>
+          <aside
+            className="work-sidebar"
+            data-scroll-progress
+            data-scroll-detail
+            data-scroll-offset="0.12"
+          >
+            <div className="work-filters" role="group" aria-label="Filter selected work">
+              {filters.map((item, index) => (
                 <button
                   key={item}
                   type="button"
-                  role="tab"
-                  aria-selected={filter === item}
-                  onClick={() => setFilter(item)}
-                  className={`rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] tabular-nums transition-colors ${
-                    filter === item
-                      ? 'border-white bg-white text-black'
-                      : 'border-white/10 bg-white/[0.02] text-white/55 hover:text-white'
-                  }`}
+                  data-active={filter === item}
+                  aria-pressed={filter === item}
+                  style={{ '--i': String(index) } as CSSProperties}
+                  onClick={() => {
+                    playTick()
+                    setFilter(item)
+                  }}
                 >
-                  {item} {COUNTS[item]}
+                  {item}
                 </button>
               ))}
             </div>
-            <div
-              className="relative z-[60] inline-flex scroll-mt-20 items-center gap-1 self-start rounded-full border border-white/10 bg-white/[0.04] p-1"
-              role="group"
-              aria-label="Projects view mode"
-            >
-              {(['carousel', 'grid'] as View[]).map((mode) => {
-                const isActive = view === mode
-                return (
-                  <button
-                    key={mode}
-                    type="button"
-                    data-view={mode}
-                    data-active={isActive}
-                    aria-pressed={isActive}
-                    onClick={() => setView(mode)}
-                    className={`scroll-mt-20 rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
-                      isActive ? 'bg-white text-black' : 'text-white/55 hover:text-white'
-                    }`}
-                  >
-                    {mode}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        </div>
 
-        <div className="mt-12">
-          {view === 'carousel' ? (
-            <div className="cloth-stage">
-              <span className="clothesline" aria-hidden="true" />
-              <div
-                ref={(node) => {
-                  emblaRef(node)
-                  viewportRef.current = node
-                }}
-                className="cloth-viewport overflow-hidden"
-                role="region"
-                aria-roledescription="carousel"
-                aria-label="Project carousel"
-                tabIndex={0}
-                onKeyDown={handleKeyDown}
-                onMouseMove={handleClothMove}
-                onMouseLeave={resetCloth}
-              >
-                <div className="flex gap-5 px-1">
-                  {visible.map((project, index) => {
-                    const isActive =
-                      index === activeIndex &&
-                      (slidesInView.length === 0 || slidesInView.includes(index))
-                    const clothIndex = visible.length > 1 ? index / (visible.length - 1) : 0
-                    return (
-                      <div
-                        key={project.id}
-                        className="project-slide min-w-0 shrink-0 basis-[min(85vw,420px)]"
-                        style={{ '--cloth-index': clothIndex } as CSSProperties}
-                        data-active={isActive}
-                        aria-roledescription="slide"
-                        aria-label={`${index + 1} of ${visible.length}`}
-                      >
-                        <span className="cloth-peg" aria-hidden="true" />
-                        <ProjectCard project={project} index={index} onOpen={setSelected} />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div data-projects-grid className="reveal-stagger grid grid-cols-1 gap-4 lg:grid-cols-3">
-              {visible.map((project, index) => (
-                <div key={project.id} className="reveal-on-scroll">
-                  <ProjectCard project={project} index={index} onOpen={setSelected} />
-                </div>
+            <div className="work-list" ref={listRef} onKeyDown={handleListKeyDown}>
+              {visible.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  data-work-item
+                  data-id={item.id}
+                  className="work-item"
+                  data-active={active.id === item.id}
+                  aria-pressed={active.id === item.id}
+                  onClick={() => {
+                    playTick()
+                    setActiveId(item.id)
+                  }}
+                >
+                  <span className="work-no">{item.no}</span>
+                  <span className="work-item-main">
+                    <strong>{item.title}</strong>
+                    <small>{item.type}</small>
+                  </span>
+                  <span className="work-arrow" aria-hidden="true">↗</span>
+                </button>
               ))}
             </div>
-          )}
-          {visible.length === 0 && (
-            <p className="mt-8 text-sm text-white/50">No projects in this category yet.</p>
-          )}
-          {view === 'carousel' && (
-            <div className="mt-8 flex items-center justify-between gap-4">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
-                Move mouse to inspect · drag or arrow keys
-              </span>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  aria-label="Previous project"
-                  onClick={() => emblaApi?.scrollPrev()}
-                  disabled={!canPrev}
-                  className="rounded-full border border-white/20 px-4 py-2 text-lg leading-none text-white/70 transition hover:border-white/40 disabled:opacity-30"
-                >
-                  ←
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next project"
-                  onClick={() => emblaApi?.scrollNext()}
-                  disabled={!canNext}
-                  className="rounded-full border border-white/20 px-4 py-2 text-lg leading-none text-white/70 transition hover:border-white/40 disabled:opacity-30"
-                >
-                  →
-                </button>
+
+            <p className="work-foot">Selected builds · 2026</p>
+          </aside>
+
+          <article
+            className={`work-preview${shattering ? ' is-shattering' : ''}`}
+            key={active.id}
+            data-tilt
+          >
+            <div
+              className="preview-topline"
+              data-scroll-progress
+              data-scroll-detail
+              data-scroll-offset="0.2"
+            >
+              <span>{active.type}</span>
+              <span>{active.no} / 03</span>
+            </div>
+
+            <div
+              className="preview-viewport"
+              style={{ '--preview-width': `${viewportValue}%` } as CSSProperties}
+              onPointerMove={handleLensMove}
+              onPointerLeave={() => setLens((current) => ({ ...current, active: false }))}
+            >
+              <DeviceFrame item={active} viewport={viewport}>
+                <Media item={active} viewport={viewport} />
+              </DeviceFrame>
+
+              <div
+                className={`xray-lens${lens.active ? ' is-active' : ''}`}
+                style={
+                  {
+                    '--lens-x': `${lens.x}%`,
+                    '--lens-y': `${lens.y}%`,
+                  } as CSSProperties
+                }
+                aria-hidden="true"
+              >
+                <div className="xray-lens-inner">
+                  <span>X-RAY / {active.no}</span>
+                  <strong>{active.type}</strong>
+                  <div className="xray-tags">
+                    {active.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                  <small>{active.category} · public link</small>
+                </div>
               </div>
             </div>
-          )}
+
+            <div
+              className="viewport-control"
+              role="group"
+              aria-label="Viewport morph"
+            >
+              <div className="viewport-buttons">
+                {[...(Object.keys(viewportWidth) as Viewport[]), 'auto' as const].map((size) => {
+                  const activeChoice = size === 'auto' ? viewportOverride === null : viewportOverride === size
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      data-active={activeChoice}
+                      aria-pressed={activeChoice}
+                      onClick={() => {
+                        playTick()
+                        setViewportOverride(size === 'auto' ? null : size)
+                      }}
+                    >
+                      {size}
+                    </button>
+                  )
+                })}
+              </div>
+              <input
+                type="range"
+                min="46"
+                max="100"
+                value={viewportValue}
+                aria-label="Preview viewport width"
+                onChange={(event) => {
+                  const value = Number(event.target.value)
+                  setViewportOverride(value < 59 ? 'mobile' : value < 86 ? 'tablet' : 'desktop')
+                }}
+              />
+              <span className="viewport-label">Device captures · STAGED DEMO</span>
+            </div>
+
+            <div className="preview-body">
+              <h3>{active.title}</h3>
+              <p className="preview-summary">{active.summary}</p>
+              <p className="preview-detail">{active.detail}</p>
+              <div className="tag-row">
+                {active.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+              <div className="preview-actions">
+                <button type="button" className="text-link text-link-button" ref={openButtonRef} onClick={handleOpen}>
+                  Open case <span aria-hidden="true">→</span>
+                </button>
+                <a href={active.href} target="_blank" rel="noreferrer" className="preview-public-link">
+                  {active.hrefLabel} <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+          </article>
         </div>
-      </div>
-      {selected && (
-        <ProjectModal
-          project={selected}
-          index={Math.max(0, projects.findIndex((item) => item.id === selected.id))}
-          onClose={closeModal}
-        />
       )}
     </section>
   )

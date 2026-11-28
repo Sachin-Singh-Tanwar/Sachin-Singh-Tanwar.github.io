@@ -23,6 +23,14 @@ export const projectSchema = z
         label: z.string().min(1).max(48),
         source: z.string().url().nullable().optional(),
         gallery: z.array(z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/)).max(6).optional(),
+        sources: z
+          .object({
+            desktop: z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/),
+            tablet: z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/),
+            mobile: z.string().regex(/^\/thumbnails\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/),
+          })
+          .strict()
+          .optional(),
       })
       .strict()
       .nullable()

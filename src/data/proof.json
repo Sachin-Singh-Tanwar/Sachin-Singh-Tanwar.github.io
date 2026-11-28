@@ -36,7 +36,9 @@
       "sentinelTestsPassed": 48,
       "briefDurationSeconds": 67.86,
       "logDurationSeconds": 96.89,
-      "durationStatus": "unverified"
+      "durationStatus": "unverified",
+      "publishableDurationSeconds": null,
+      "durationNote": "Three environment-dependent observations: brief 67.86s, progress log 96.89s, fresh read-only run 48 passed in 52.20s. No publishable seconds; allowed copy: 48 tests pass; runtime varies by environment."
     }
   },
   "block3": {
@@ -62,12 +64,13 @@
     "tests": {
       "passed": 48,
       "durationSeconds": null,
+      "publishableDurationSeconds": null,
       "durationStatus": "unverified",
-      "durationNote": "Brief records 67.86s; progress log records 96.89s. Reconcile before publishing a duration."
+      "durationNote": "Environment-dependent observations only: brief 67.86s, progress log 96.89s, fresh read-only run 48 passed in 52.20s. Duration remains unverified; no seconds published. Allowed copy: 48 tests pass; runtime varies by environment."
     },
     "commits": {
-      "main": "214c3bcd5d2f87a4171db4a9d2cd3973e7fb54bc",
-      "data": "bc53ad8739f48a8779109a4f8e233f60b11406f5"
+      "main": "6cd725339f1745161300e4ec4defff4d4a4c87e4",
+      "data": "d997ea227dd8c7cde3903e8a71f0cf5b44321115"
     },
     "incidents": {
       "verified": [1],
@@ -81,10 +84,19 @@
     }
   },
   "tally": {
-    "status": "pending data gate",
+    "status": "proof recovered — scheduled audit — external trigger",
     "gate": "2026-12-01: 15:05Z + 15:35Z",
-    "wording": "scheduled audit — external trigger",
-    "countedInPortfolioUntilGate": false
+    "wording": "scheduled audit — external trigger (cron-job.org)",
+    "countedInPortfolioUntilGate": false,
+    "proof": {
+      "actions": ["45845546152", "45850606650"],
+      "dataCommits": [
+        "cc2bd163aa74afcc51a8e1be66bc0293fd2625d5",
+        "171eaa7efded8497d72d61324f749703b0d0f92c"
+      ],
+      "rows": "63 → 66 → 69",
+      "observation": "read-only recovery · ok=true · trigger=schedule"
+    }
   },
   "planned": {
     "evidenceWorkbench": "IN BUILD",
@@ -107,7 +119,7 @@
         "observation": "five HEALTHY sources · incident #1 visible · STAGED DEMO labelled"
       }
     ],
-    "tallyCapture": "PENDING DATA GATE — no capture",
+    "tallyCapture": "RECOVERED READ-ONLY SCHEDULE PROOF — no visual capture",
     "syntheticCovers": 0,
     "buildLabDemos": [
       "visible focus token",

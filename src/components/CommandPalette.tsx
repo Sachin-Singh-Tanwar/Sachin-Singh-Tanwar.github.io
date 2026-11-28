@@ -1,216 +1,338 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from 'react'
 import {
   ArrowUpRight,
   Check,
-  Command as CommandIcon,
+  Copy,
   Mail,
+  RotateCcw,
   Search,
+  Volume2,
+  VolumeX,
   X,
 } from 'lucide-react'
-import { cn } from '../lib/cn'
+import { featuredWork } from '../data/featuredWork'
+import { isAudioEnabled, playTick, subscribeAudio } from '../lib/audioBus'
+import { EMAIL, copyEmail, jumpTo, requestReshatter, toggleAudio } from '../lib/siteActions'
 import { GithubIcon, LinkedinIcon } from './Icons'
+
+type PaletteGroup = 'Navigate' | 'Actions' | 'Profiles'
 
 type PaletteItem = {
   id: string
   label: string
   hint: string
-  group: 'Navigation' | 'Links'
+  group: PaletteGroup
   icon: ReactNode
   run: () => void
 }
 
-const EMAIL = 'sachin.singh.tanwar325@gmail.com'
+type Props = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
 
-export default function CommandPalette() {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const [copied, setCopied] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-
+export default function CommandPalette({ open, onOpenChange }: Props) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault()
-        setOpen((value) => !value)
-      } else if (event.key === 'Escape') {
-        setOpen(false)
+        onOpenChange(!open)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [open, onOpenChange])
+
+  if (!open) return null
+  return <PaletteDialog onOpenChange={onOpenChange} />
+}
+
+function PaletteDialog({ onOpenChange }: Pick<Props, 'onOpenChange'>) {
+  const [query, setQuery] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [soundOn, setSoundOn] = useState(isAudioEnabled)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => subscribeAudio(setSoundOn), [])
 
   useEffect(() => {
-    if (!open) return
-    setQuery('')
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onOpenChange(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onOpenChange])
+
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null
     const id = window.setTimeout(() => inputRef.current?.focus(), 0)
-    return () => window.clearTimeout(id)
-  }, [open])
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.clearTimeout(id)
+      document.body.style.overflow = previousOverflow
+      previousFocus?.focus()
+    }
+  }, [])
 
-  const goTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-    setOpen(false)
-  }
+  const goTo = useCallback(
+    (id: string) => {
+      jumpTo(id)
+      onOpenChange(false)
+    },
+    [onOpenChange],
+  )
 
-  const items = useMemo<PaletteItem[]>(
-    () => [
+  const goToWork = useCallback(
+    (id: string) => {
+      window.location.hash = `#work/${id}`
+      onOpenChange(false)
+    },
+    [onOpenChange],
+  )
+
+  const items = useMemo<PaletteItem[]>(() => {
+    const navigation: PaletteItem[] = [
       {
-        id: 'projects',
-        label: 'Go to Projects',
-        hint: 'Selected work',
-        group: 'Navigation',
+        id: 'work',
+        label: 'Go to selected work',
+        hint: 'Projects',
+        group: 'Navigate',
         icon: <ArrowUpRight className="h-4 w-4" />,
-        run: () => goTo('projects'),
+        run: () => goTo('work'),
+      },
+      ...featuredWork.map((project) => ({
+        id: `work-${project.id}`,
+        label: `Open ${project.title}`,
+        hint: project.type,
+        group: 'Navigate' as const,
+        icon: <ArrowUpRight className="h-4 w-4" />,
+        run: () => goToWork(project.id),
+      })),
+      {
+        id: 'telemetry',
+        label: 'Go to telemetry',
+        hint: 'Query lens',
+        group: 'Navigate',
+        icon: <ArrowUpRight className="h-4 w-4" />,
+        run: () => goTo('telemetry'),
       },
       {
-        id: 'evidence',
-        label: 'Go to Evidence Workbench',
-        hint: 'Verified claims',
-        group: 'Navigation',
+        id: 'capabilities',
+        label: 'Go to capabilities',
+        hint: 'What I build',
+        group: 'Navigate',
         icon: <ArrowUpRight className="h-4 w-4" />,
-        run: () => goTo('evidence'),
+        run: () => goTo('capabilities'),
       },
       {
-        id: 'build-lab',
-        label: 'Go to Build Lab',
-        hint: 'Progressive enhancement demos',
-        group: 'Navigation',
+        id: 'lab',
+        label: 'Go to UI Lab',
+        hint: 'Experiments',
+        group: 'Navigate',
         icon: <ArrowUpRight className="h-4 w-4" />,
-        run: () => goTo('build-lab'),
-      },
-      {
-        id: 'services',
-        label: 'Go to Services',
-        hint: 'What I do',
-        group: 'Navigation',
-        icon: <ArrowUpRight className="h-4 w-4" />,
-        run: () => goTo('services'),
+        run: () => goTo('lab'),
       },
       {
         id: 'contact',
-        label: 'Go to Contact',
-        hint: 'Get in touch',
-        group: 'Navigation',
+        label: 'Go to contact',
+        hint: 'Start a project',
+        group: 'Navigate',
         icon: <ArrowUpRight className="h-4 w-4" />,
         run: () => goTo('contact'),
       },
+    ]
+
+    const actions: PaletteItem[] = [
+      {
+        id: 'toggle-audio',
+        label: soundOn ? 'Toggle audio off' : 'Toggle audio on',
+        hint: soundOn ? 'Sound on' : 'Sound off',
+        group: 'Actions',
+        icon: soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />,
+        run: () => toggleAudio(),
+      },
+      {
+        id: 'reshatter',
+        label: 'Re-Shatter Screen',
+        hint: 'Replay opening',
+        group: 'Actions',
+        icon: <RotateCcw className="h-4 w-4" />,
+        run: () => {
+          onOpenChange(false)
+          requestReshatter()
+        },
+      },
+      {
+        id: 'copy-email',
+        label: 'Copy email',
+        hint: EMAIL,
+        group: 'Actions',
+        icon: copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />,
+        run: () => {
+          void copyEmail()
+          setCopied(true)
+          window.setTimeout(() => setCopied(false), 1400)
+        },
+      },
+    ]
+
+    const profiles: PaletteItem[] = [
       {
         id: 'github',
         label: 'Open GitHub',
         hint: 'github.com/Sachin-Singh-Tanwar',
-        group: 'Links',
+        group: 'Profiles',
         icon: <GithubIcon className="h-4 w-4" />,
         run: () => window.open('https://github.com/Sachin-Singh-Tanwar', '_blank', 'noopener,noreferrer'),
       },
       {
         id: 'linkedin',
         label: 'Open LinkedIn',
-        hint: 'LinkedIn profile',
-        group: 'Links',
+        hint: 'Profile',
+        group: 'Profiles',
         icon: <LinkedinIcon className="h-4 w-4" />,
-        run: () => window.open('https://www.linkedin.com/in/sachin-singh-tanwar-5582582b4', '_blank', 'noopener,noreferrer'),
+        run: () =>
+          window.open('https://www.linkedin.com/in/sachin-singh-tanwar-5582582b4', '_blank', 'noopener,noreferrer'),
       },
       {
         id: 'email',
-        label: 'Copy Email',
+        label: 'Send email',
         hint: EMAIL,
-        group: 'Links',
-        icon: copied ? <Check className="h-4 w-4" /> : <Mail className="h-4 w-4" />,
+        group: 'Profiles',
+        icon: <Mail className="h-4 w-4" />,
         run: () => {
-          void navigator.clipboard?.writeText(EMAIL)
-          setCopied(true)
-          window.setTimeout(() => setCopied(false), 1500)
+          window.location.href = `mailto:${EMAIL}`
         },
       },
-    ],
-    [copied],
+    ]
+
+    return [...navigation, ...actions, ...profiles]
+  }, [copied, goTo, goToWork, onOpenChange, soundOn])
+
+  const filtered = useMemo(
+    () => items.filter((item) => `${item.label} ${item.hint}`.toLowerCase().includes(query.toLowerCase())),
+    [items, query],
   )
 
-  const filtered = items.filter((item) =>
-    `${item.label} ${item.hint}`.toLowerCase().includes(query.toLowerCase()),
-  )
+  const activeId = filtered[activeIndex]?.id
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      if (filtered.length === 0) return
+      event.preventDefault()
+      playTick()
+      let next = activeIndex
+      if (event.key === 'ArrowDown') next = (activeIndex + 1) % filtered.length
+      if (event.key === 'ArrowUp') next = (activeIndex - 1 + filtered.length) % filtered.length
+      if (event.key === 'Home') next = 0
+      if (event.key === 'End') next = filtered.length - 1
+      setActiveIndex(next)
+      dialogRef.current
+        ?.querySelector<HTMLElement>(`#palette-option-${filtered[next].id}`)
+        ?.scrollIntoView({ block: 'nearest' })
+      return
+    }
+
+    if (event.key === 'Enter' && document.activeElement === inputRef.current) {
+      event.preventDefault()
+      filtered[activeIndex]?.run()
+      return
+    }
+
+    if (event.key !== 'Tab') return
+    const nodes = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>('button, a[href], input') ?? [],
+    )
+    if (nodes.length === 0) return
+    const first = nodes[0]
+    const last = nodes[nodes.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
 
   return (
-    <>
-      <button
-        type="button"
-        data-command-trigger
-        aria-label="Open command palette"
-        onClick={() => setOpen(true)}
-        className="fixed right-5 top-5 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 backdrop-blur transition hover:border-white/30 hover:text-white"
+    <div className="palette-backdrop" onMouseDown={(event) => {
+      if (event.target === event.currentTarget) onOpenChange(false)
+    }}>
+      <div
+        ref={dialogRef}
+        className="palette"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        onKeyDown={handleKeyDown}
       >
-        <Search className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Command</span>
-        <kbd className="rounded border border-white/15 px-1.5 py-0.5">⌘K</kbd>
-      </button>
-
-      {open && (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Command palette">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setOpen(false)}
+        <div className="palette-search">
+          <Search className="h-4 w-4" aria-hidden="true" />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value)
+              setActiveIndex(0)
+            }}
+            placeholder="Search sections, projects and actions"
+            aria-label="Search sections, projects and actions"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="palette-results"
+            aria-activedescendant={activeId ? `palette-option-${activeId}` : undefined}
+            autoComplete="off"
+            data-palette-input
           />
-          <div
-            data-command-palette
-            className="fixed left-1/2 top-1/4 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 rounded-2xl border border-white/10 bg-[#0b0b0d]/95 p-2 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
-          >
-            <div className="flex items-center gap-3 border-b border-white/10 px-3 py-3">
-              <Search className="h-4 w-4 shrink-0 text-white/40" />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search actions…"
-                aria-label="Search commands"
-                data-palette-input
-                className="w-full border-0 bg-transparent text-sm text-white caret-cyan-400 placeholder:text-white/30"
-              />
-              <button
-                type="button"
-                aria-label="Close command palette"
-                onClick={() => setOpen(false)}
-                className="rounded-md p-1 text-white/40 transition hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="max-h-[55vh] overflow-y-auto py-2">
-              {(['Navigation', 'Links'] as const).map((group) => {
-                const groupItems = filtered.filter((item) => item.group === group)
-                if (groupItems.length === 0) return null
-                return (
-                  <div key={group} className="px-1 pb-2">
-                    <p className="px-3 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white/30">
-                      {group}
-                    </p>
-                    {groupItems.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={item.run}
-                        className={cn(
-                          'flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/70 transition hover:bg-white/10 hover:text-white',
-                          copied && item.id === 'email' && 'text-cyan-200',
-                        )}
-                      >
-                        <span className="text-cyan-300/80">{item.icon}</span>
-                        <span className="flex-1">{item.label}</span>
-                        <span className="truncate font-mono text-[10px] text-white/30">{item.hint}</span>
-                      </button>
-                    ))}
-                  </div>
-                )
-              })}
-              {filtered.length === 0 && (
-                <p className="px-4 py-6 text-center text-sm text-white/40">No matching actions.</p>
-              )}
-            </div>
-            <div className="flex items-center gap-2 border-t border-white/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/25">
-              <CommandIcon className="h-3 w-3" /> K to toggle · Esc to close
-            </div>
-          </div>
+          <button type="button" aria-label="Close site menu" onClick={() => onOpenChange(false)}>
+            <X className="h-4 w-4" />
+          </button>
         </div>
-      )}
-    </>
+        <div id="palette-results" className="palette-results" role="listbox" aria-label="Site menu options">
+          {(['Navigate', 'Actions', 'Profiles'] as const).map((group) => {
+            const groupItems = filtered.filter((item) => item.group === group)
+            if (groupItems.length === 0) return null
+            return (
+              <div key={group} className="palette-group">
+                <p>{group}</p>
+                {groupItems.map((item) => {
+                  const index = filtered.indexOf(item)
+                  return (
+                    <button
+                      key={item.id}
+                      id={`palette-option-${item.id}`}
+                      type="button"
+                      role="option"
+                      aria-selected={index === activeIndex}
+                      data-active={index === activeIndex}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      onClick={() => item.run()}
+                    >
+                      <span className="palette-icon" aria-hidden="true">{item.icon}</span>
+                      <span className="palette-label">{item.label}</span>
+                      <span className="palette-hint">{item.hint}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )
+          })}
+          {filtered.length === 0 && <p className="palette-empty">No matching sections.</p>}
+        </div>
+        <div className="palette-foot">↑↓ to move · Enter to open · Esc to close</div>
+      </div>
+    </div>
   )
 }

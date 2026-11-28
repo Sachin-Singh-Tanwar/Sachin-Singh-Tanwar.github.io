@@ -5,7 +5,7 @@
     "tagline": "Score a B2B lead 1-10 from live public web data.",
     "problem": "Manual lead research is slow and usually depends on paid APIs before a lead is even worth a look.",
     "solution": "Built a Next.js app that researches a company through keyless public sources and returns a scored report with reasoning and sources, plus a deterministic fallback.",
-    "impact": "In development",
+    "impact": "Live demo — public URL",
     "tech": [
       "Next.js",
       "TypeScript",
@@ -13,15 +13,20 @@
       "Zod"
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/beacon-lead-scorer",
-    "live": null,
+    "live": "https://beacon-lead-scorer.vercel.app/",
     "visual": {
       "src": "/thumbnails/beacon-local-capture.webp",
-      "alt": "Beacon lead scorer local app landing page with company report form, captured from the running dev server.",
-      "label": "LOCAL APP CAPTURE · IN BUILD",
-      "source": null
+      "alt": "Beacon live demo shown at desktop, tablet and mobile widths with the company report form.",
+      "label": "LIVE DEMO · DEVICE CAPTURES",
+      "source": "https://beacon-lead-scorer.vercel.app/",
+      "sources": {
+        "desktop": "/thumbnails/beacon-desktop-2026-11-28.webp",
+        "tablet": "/thumbnails/beacon-tablet-2026-11-28.webp",
+        "mobile": "/thumbnails/beacon-mobile-2026-11-28.webp"
+      }
     },
     "category": "web",
-    "status": "building",
+    "status": "live",
     "year": 2026
   },
   {
@@ -62,7 +67,7 @@
     "tagline": "Chrome extension that checks a page against a Django API.",
     "problem": "Users cannot quickly tell whether the page in front of them is legitimate or a phishing site.",
     "solution": "Built a Chrome popup that sends the current URL to a hosted Django REST endpoint and shows a safe or phishing verdict.",
-    "impact": "Shipped and live",
+    "impact": "Live API demo — public endpoint",
     "tech": [
       "Django",
       "Django REST Framework",
@@ -70,7 +75,7 @@
       "Chrome Extension"
     ],
     "github": "https://github.com/Sachin-Singh-Tanwar/phishing-detector",
-    "live": "https://phishing-detector-nhel.onrender.com",
+    "live": "https://phishing-detector-nhel.onrender.com/api/https://google.com",
     "category": "tool",
     "status": "live",
     "year": 2026
