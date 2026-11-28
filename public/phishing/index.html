@@ -119,7 +119,8 @@
 
       .result[data-state="safe"] { border-left-color: var(--deep); }
       .result[data-state="phishing"] { border-left-color: var(--accent); }
-      .result[data-state="error"] { border-left-color: var(--muted); }
+      .result[data-state="error"],
+      .result[data-state="checking"] { border-left-color: var(--muted); }
 
       .result[data-state] { display: block; }
 
@@ -130,11 +131,33 @@
         color: var(--muted);
       }
 
+      .status-chip {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 2px 6px;
+        border: 1px solid currentColor;
+        font: 9px var(--font-mono);
+        letter-spacing: 0.12em;
+        vertical-align: 1px;
+      }
+
+      .result[data-state="safe"] .status-chip { color: var(--deep); }
+      .result[data-state="phishing"] .status-chip { color: var(--accent); }
+      .result[data-state="error"] .status-chip,
+      .result[data-state="checking"] .status-chip { color: var(--muted); }
+
       .result-value {
         margin-top: 8px;
         font-size: 20px;
         font-weight: 620;
         letter-spacing: -0.02em;
+      }
+
+      .result-note {
+        margin: 8px 0 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--muted);
       }
 
       details {
@@ -192,10 +215,14 @@
         </form>
 
         <div id="result" class="result" role="status" aria-live="polite">
-          <div class="result-label">Endpoint verdict</div>
+          <div class="result-label">
+            <span id="result-label-text">Endpoint verdict</span>
+            <span class="status-chip" id="result-chip"></span>
+          </div>
           <div class="result-value" id="result-value"></div>
+          <p class="result-note" id="result-note"></p>
           <details>
-            <summary>Raw response</summary>
+            <summary id="raw-summary">Raw response</summary>
             <pre id="raw"></pre>
           </details>
         </div>
@@ -209,8 +236,22 @@
       const input = document.getElementById('target')
       const button = document.getElementById('submit')
       const result = document.getElementById('result')
+      const labelText = document.getElementById('result-label-text')
+      const chip = document.getElementById('result-chip')
       const value = document.getElementById('result-value')
+      const note = document.getElementById('result-note')
+      const rawSummary = document.getElementById('raw-summary')
       const raw = document.getElementById('raw')
+
+      function setResult(state, heading, detail, chipLabel, label, rawText) {
+        result.dataset.state = state
+        labelText.textContent = label
+        chip.textContent = chipLabel
+        value.textContent = heading
+        note.textContent = detail
+        raw.textContent = rawText || ''
+        rawSummary.textContent = state === 'error' ? 'Technical detail' : 'Raw response'
+      }
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault()
@@ -222,20 +263,34 @@
 
         button.disabled = true
         button.textContent = 'Checking…'
-        value.textContent = 'Waiting for endpoint…'
-        result.dataset.state = 'error'
-        raw.textContent = ''
+        setResult(
+          'checking',
+          'Checking the URL…',
+          'Calling the public checker endpoint.',
+          'CHECKING',
+          'Check status',
+          ''
+        )
 
         try {
           const response = await fetch(
             'https://phishing-detector-nhel.onrender.com/api/' + encodeURI(target)
           )
           const text = await response.text()
-          raw.textContent = text
 
           if (!response.ok) {
-            result.dataset.state = 'error'
-            value.textContent = 'Endpoint returned HTTP ' + response.status
+            const isHtml = text.trim().startsWith('<!doctype html')
+            const rawText = isHtml
+              ? 'HTML error page returned by the checker (HTTP ' + response.status + ').'
+              : text
+            setResult(
+              'error',
+              "We couldn't check this site right now.",
+              'No verdict was returned. Please try again later or verify the URL.',
+              'UNAVAILABLE',
+              'Check status',
+              rawText
+            )
             return
           }
 
@@ -243,25 +298,48 @@
           try {
             data = JSON.parse(text)
           } catch {
-            result.dataset.state = 'error'
-            value.textContent = 'Endpoint did not return JSON'
+            setResult(
+              'error',
+              'The checker returned an unexpected response.',
+              'No verdict was available. Please try again.',
+              'UNAVAILABLE',
+              'Check status',
+              text
+            )
             return
           }
 
           const verdict = String(data.result || data.verdict || '').trim()
           if (!verdict) {
-            result.dataset.state = 'error'
-            value.textContent = 'No verdict field in response'
+            setResult(
+              'error',
+              'The checker returned no verdict.',
+              'This URL could not be classified right now.',
+              'UNAVAILABLE',
+              'Check status',
+              text
+            )
             return
           }
 
-          const lower = verdict.toLowerCase()
-          result.dataset.state = lower.includes('phish') ? 'phishing' : 'safe'
-          value.textContent = verdict
+          const isPhishing = verdict.toLowerCase().includes('phish')
+          setResult(
+            isPhishing ? 'phishing' : 'safe',
+            verdict,
+            '',
+            isPhishing ? 'PHISHING' : 'SAFE',
+            'Endpoint verdict',
+            text
+          )
         } catch (error) {
-          result.dataset.state = 'error'
-          value.textContent = 'Could not reach endpoint'
-          raw.textContent = String(error)
+          setResult(
+            'error',
+            'The checker could not be reached.',
+            'Please try again in a moment.',
+            'UNAVAILABLE',
+            'Check status',
+            String(error)
+          )
         } finally {
           button.disabled = false
           button.textContent = 'Check URL'
