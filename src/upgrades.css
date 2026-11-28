@@ -288,6 +288,12 @@
 
 .header-github-card {
   min-width: 184px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.header-github-card:hover .header-card-meta {
+  color: var(--accent);
 }
 
 .command-trigger {

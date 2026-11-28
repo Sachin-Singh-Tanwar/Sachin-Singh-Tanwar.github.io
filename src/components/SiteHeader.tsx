@@ -11,8 +11,6 @@ const navItems = [
 
 const sectionIds = ['top', 'work', 'telemetry', 'capabilities', 'stack', 'lab', 'contact']
 
-type GithubState = { label: string; detail: string }
-
 type Props = {
   onCommand: () => void
 }
@@ -31,10 +29,6 @@ export default function SiteHeader({ onCommand }: Props) {
   const [compact, setCompact] = useState(false)
   const [active, setActive] = useState('top')
   const [soundOn, setSoundOn] = useState(isAudioEnabled)
-  const [github, setGithub] = useState<GithubState>({
-    label: 'GitHub · public profile',
-    detail: 'Live activity unavailable',
-  })
   const [clock, setClock] = useState(istClock)
   const compactTimer = useRef(0)
 
@@ -98,30 +92,6 @@ export default function SiteHeader({ onCommand }: Props) {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      try {
-        const response = await fetch(
-          'https://api.github.com/users/Sachin-Singh-Tanwar/repos?per_page=1&sort=updated',
-          { headers: { Accept: 'application/vnd.github+json' } },
-        )
-        if (!response.ok || cancelled) return
-        const data = (await response.json()) as Array<{ name?: string }>
-        const name = data[0]?.name
-        if (name && !cancelled) {
-          setGithub({ label: 'GitHub · live', detail: `Latest repo: ${name}` })
-        }
-      } catch {
-        // The real public profile link remains available as the fallback.
-      }
-    }
-    void load()
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
   const activeHref = `#${active === 'stack' ? 'capabilities' : active}`
 
   return (
@@ -168,11 +138,17 @@ export default function SiteHeader({ onCommand }: Props) {
             <strong>Available for Freelance &amp; Roles</strong>
             <span className="header-card-meta">IST {clock}</span>
           </div>
-          <div className="header-card header-github-card">
+          <a
+            className="header-card header-github-card"
+            href="https://github.com/Sachin-Singh-Tanwar"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open public GitHub profile"
+          >
             <span className="header-card-label">GitHub</span>
-            <strong>{github.label}</strong>
-            <span className="header-card-meta">{github.detail}</span>
-          </div>
+            <strong>GitHub · public profile</strong>
+            <span className="header-card-meta">Open profile ↗</span>
+          </a>
           <button type="button" className="command-trigger" onClick={onCommand} aria-label="Open site menu">
             <kbd>⌘K</kbd>
           </button>
